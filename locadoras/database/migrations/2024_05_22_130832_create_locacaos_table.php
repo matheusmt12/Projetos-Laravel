@@ -21,6 +21,11 @@ class CreateLocacaosTable extends Migration
             $table->float('valor',53);
             $table->integer('km_inicial');
             $table->string('km_final',45);
+            $table->unsignedBigInteger('id_cliente');
+            $table->unsignedBigInteger('id_carro');
+
+            $table->foreign('id_cliente')->references('id')->on('clientes');
+            $table->foreign('id_carro')->references('id')->on('carros');
             $table->timestamps();
         });
     }
@@ -32,6 +37,10 @@ class CreateLocacaosTable extends Migration
      */
     public function down()
     {
+        Schema::table('locacaos', function(Blueprint $table){
+            $table->dropForeign(['id_cliente']);
+            $table->dropForeign(['id_carro']);
+        });
         Schema::dropIfExists('locacaos');
     }
 }

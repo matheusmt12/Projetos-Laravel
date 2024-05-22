@@ -3,11 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Carro;
-use App\Http\Requests\StoreCarroRequest;
-use App\Http\Requests\UpdateCarroRequest;
+use Illuminate\Http\Request;
 
 class CarroController extends Controller
 {
+
+
+    protected $carro;
+    public function __construct(Carro $carro)
+    {
+        $this->carro = $carro;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +22,13 @@ class CarroController extends Controller
      */
     public function index()
     {
-        //
+        $carros = $this->carro->all();
+
+        if ($carros->count() <= 0) {
+            return response()->json(['erro' => 'não há nenhum Carro'], 404);
+        }
+
+        return response()->json($carros, 200);
     }
 
     /**
@@ -34,9 +47,18 @@ class CarroController extends Controller
      * @param  \App\Http\Requests\StoreCarroRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreCarroRequest $request)
+    public function store(Request $request)
     {
-        //
+
+
+        $carro = $this->carro->create([
+            'placa' => $request->placa,
+            'disponivel' => $request->disponivel,
+            'km' => $request->km,
+            'id_modelo' => $request->id_modelo
+        ]);
+
+        return response()->json($carro, 201);
     }
 
     /**
@@ -45,9 +67,15 @@ class CarroController extends Controller
      * @param  \App\Models\Carro  $carro
      * @return \Illuminate\Http\Response
      */
-    public function show(Carro $carro)
+    public function show($id)
     {
-        //
+        $carro = $this->carro->find($id);
+
+        if ($carro == null) {
+            return response()->json(['erro' => 'Não foi possivel encontrar o Carro'], 404);
+        }
+
+        return response()->json($carro, 200);
     }
 
     /**
@@ -68,9 +96,16 @@ class CarroController extends Controller
      * @param  \App\Models\Carro  $carro
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateCarroRequest $request, Carro $carro)
+    public function update(Request $request, $id)
     {
-        //
+        $carro = $this->carro->find($id);
+
+        if ($carro == null) {
+            return response()->json(['erro' => 'O Carro não foi encontrado']);
+        }
+
+        $carro->update($request->all());
+        return response()->json($carro, 200);
     }
 
     /**
@@ -79,8 +114,12 @@ class CarroController extends Controller
      * @param  \App\Models\Carro  $carro
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Carro $carro)
+    public function destroy($id)
     {
-        //
+        $carro = $this->carro->find($id);
+
+        if ($carro == null) {
+            return response()->json(['erro' => 'O Carro não foi encontrado'], 200);
+        }
     }
 }
