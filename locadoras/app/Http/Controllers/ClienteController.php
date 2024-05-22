@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
-use App\Http\Requests\StoreClienteRequest;
-use App\Http\Requests\UpdateClienteRequest;
+use Illuminate\Http\Request;
 
 class ClienteController extends Controller
 {
@@ -13,9 +12,21 @@ class ClienteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    protected $cliente;
+    public function __construct(Cliente $cliente)
+    {
+        $this->cliente = $cliente;
+    }
     public function index()
     {
-        //
+        $clientes = $this->cliente->all();
+
+        if($clientes->count() <= 0){
+            return response()->json(['info' => 'não há nenhum elemento na lista']);
+        }
+
+        return response()->json($clientes,200);
     }
 
     /**
@@ -34,9 +45,11 @@ class ClienteController extends Controller
      * @param  \App\Http\Requests\StoreClienteRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreClienteRequest $request)
+    public function store(Request $request)
     {
-        //
+        $cliente = $this->cliente->create($request->all());
+
+        return response()->json($cliente,201);
     }
 
     /**
@@ -45,9 +58,15 @@ class ClienteController extends Controller
      * @param  \App\Models\Cliente  $cliente
      * @return \Illuminate\Http\Response
      */
-    public function show(Cliente $cliente)
+    public function show($id)
     {
-        //
+        $cliente = $this->cliente->find($id);
+
+        if($cliente == null){
+            return response()->json(['erro' => 'não ha nenhum cliente com este id'],404);
+        }
+
+        return response()->json($cliente, 200);
     }
 
     /**
@@ -68,9 +87,16 @@ class ClienteController extends Controller
      * @param  \App\Models\Cliente  $cliente
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateClienteRequest $request, Cliente $cliente)
+    public function update(Request $request, $id)
     {
-        //
+        $cliente = $this->cliente->find($id);
+
+        if($cliente == null){
+            return response()->json(['erro' => 'não ha nenhum cliente com este id'],404);
+        }
+
+        $cliente->update($request->all());
+        return response()->json($cliente,200);
     }
 
     /**
@@ -79,8 +105,15 @@ class ClienteController extends Controller
      * @param  \App\Models\Cliente  $cliente
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cliente $cliente)
+    public function destroy($id)
     {
-        //
+        $cliente = $this->cliente->find($id);
+
+        if($cliente == null){
+            return response()->json(['erro' => 'não ha nenhum cliente com este id'],404);
+        }
+
+        $cliente->delete();
+        return response()->json(['sucesso' => 'cliente desativado'],200);
     }
 }

@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Modelo;
-use App\Http\Requests\StoreModeloRequest;
-use App\Http\Requests\UpdateModeloRequest;
+use Illuminate\Http\Request;
 
 class ModeloController extends Controller
 {
@@ -13,9 +12,21 @@ class ModeloController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    protected $modelo;
+
+    public function __construct(Modelo $modelo){
+        $this->modelo = $modelo;
+    }
     public function index()
     {
-        //
+        $modelos = $this->modelo->all();
+
+        if ($modelos->count() <= 0){
+            return response()->json(['erro' => 'não há nenhum modelo'],404);
+        }
+
+        return response()->json($modelos,200);
     }
 
     /**
@@ -34,9 +45,13 @@ class ModeloController extends Controller
      * @param  \App\Http\Requests\StoreModeloRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreModeloRequest $request)
+    public function store(Request $request)
     {
-        //
+
+        
+        $modelo = $this->modelo->create($request->all());
+        
+        return response()->json($modelo,201);
     }
 
     /**
@@ -45,9 +60,15 @@ class ModeloController extends Controller
      * @param  \App\Models\Modelo  $modelo
      * @return \Illuminate\Http\Response
      */
-    public function show(Modelo $modelo)
+    public function show($id)
     {
-        //
+        $modelo = $this->modelo->find($id);
+
+        if($modelo == null){
+            return response()->json(['erro' => 'Não foi possivel encontrar o modelo'],404);
+        }
+
+        return response()->json($modelo,200);
     }
 
     /**
@@ -68,9 +89,16 @@ class ModeloController extends Controller
      * @param  \App\Models\Modelo  $modelo
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateModeloRequest $request, Modelo $modelo)
+    public function update(Request $request, $id)
     {
-        //
+        $modelo = $this->modelo->find($id);
+
+        if($modelo == null){
+            return response()->json(['erro' => 'O modelo não foi encontrado']);
+        }
+
+        $modelo->update($request->all());
+        return response()->json($modelo,200);
     }
 
     /**
@@ -79,8 +107,12 @@ class ModeloController extends Controller
      * @param  \App\Models\Modelo  $modelo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Modelo $modelo)
+    public function destroy($id)
     {
-        //
+        $modelo = $this->modelo->find($id);
+
+        if($modelo == null){
+            return response()->json(['erro' => 'O modelo não foi encontrado'],200);
+        }
     }
 }
