@@ -49,6 +49,7 @@ class ModeloController extends Controller
     {
 
         
+        $request->validate($this->modelo->rules(),$this->modelo->feedback());
         $modelo = $this->modelo->create($request->all());
         
         return response()->json($modelo,201);

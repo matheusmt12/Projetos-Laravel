@@ -19,4 +19,22 @@ class Locacao extends Model
         'id_cliente',
         'id_carro'
     ];
+
+
+    public function rules(){
+        return [
+            'data_inicio_periodo' => 'required',
+            'data_previsto_periodo'=> 'required',
+            'data_final_previsto_periodo'=> 'required',
+            'valor' => 'required',
+            'km_inicial' => 'required',
+            'km_final' => 'required',
+            'id_cliente' => 'required',
+            'id_carro' => 'required'
+        ];
+    }
+
+    public function feedback(){
+        return ['required' => 'O campo :attribute é requerido'];
+    }
 }
