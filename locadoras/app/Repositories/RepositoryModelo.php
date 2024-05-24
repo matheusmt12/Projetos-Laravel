@@ -4,8 +4,9 @@ namespace App\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RepositoryMarca extends AbstractRepository
+class RepositoryModelo extends AbstractRepository
 {
+
 
     protected $model;
 
@@ -16,13 +17,12 @@ class RepositoryMarca extends AbstractRepository
 
     public function delete($id)
     {
-
         $this->model = $this->model->find($id);
-
         if ($this->model == null) {
             return null;
         }
-
+        
         return $this->model->delete();
+
     }
 }

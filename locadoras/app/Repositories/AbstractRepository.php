@@ -16,7 +16,7 @@ class AbstractRepository{
 
 
     public function getAll(){
-        return $this->model->with('modelos')->get();
+        return $this->model->all();
     }
 
     public function create($request){
@@ -24,7 +24,7 @@ class AbstractRepository{
     }
 
     public function get($id){
-        return $this->model->with('modelos')->find($id);
+        return $this->model->find($id);
     }
 
     public function edit($id, $request){
@@ -37,15 +37,4 @@ class AbstractRepository{
         return $this->model;
     }
 
-    public function delete($id){
-
-        $this->model = $this->model->find($id);
-
-        if( $this->model == null){
-            return null;
-        }
-
-        return $this->model->delete();
-
-    }
 }
