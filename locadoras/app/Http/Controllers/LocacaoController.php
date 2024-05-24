@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Locacao;
+use App\Repositories\RepositoryLocacao;
 use Illuminate\Http\Request;
 
 class LocacaoController extends Controller
@@ -10,7 +11,8 @@ class LocacaoController extends Controller
 
     protected $locacao;
 
-    public function __construct(Locacao $locacao){
+    public function __construct(Locacao $locacao)
+    {
         $this->locacao = $locacao;
     }
     /**
@@ -20,13 +22,14 @@ class LocacaoController extends Controller
      */
     public function index()
     {
-     $locacoes = $this->locacao->with('cliente')->with('carro')->get();
-     
-     if( $locacoes->count() <= 0){
-        return response()->json(['erro'=> 'não ha nenhuma locacao no momento'],404);
-     }
 
-     return response()->json($locacoes,200);
+        $repository = new RepositoryLocacao($this->locacao);
+        $locacoes = $repository->getAll();
+        if ($locacoes->count() <= 0) {
+            return response()->json(['erro' => 'não ha nenhuma locacao no momento'], 404);
+        }
+
+        return response()->json($locacoes, 200);
     }
 
     /**
@@ -48,9 +51,13 @@ class LocacaoController extends Controller
     public function store(Request $request)
     {
 
-        $locacao = $this->locacao->create($request->all());
+        $repository = new RepositoryLocacao($this->locacao);
 
-        return response()->json($locacao,201);
+        $request->validate($this->locacao->rules(),$this->locacao->feedback());
+
+        $locacao = $repository->create($request);
+
+        return response()->json($locacao, 201);
     }
 
     /**
@@ -61,12 +68,14 @@ class LocacaoController extends Controller
      */
     public function show($id)
     {
-        $locacao = $this->locacao->find($id);
+        $repository = new RepositoryLocacao($this->locacao);
 
-        if($locacao == null){
+        $locacao = $repository->get($id);
+
+        if ($locacao == null) {
             return response()->json(['erro' => 'não foi possivel encontrar a locacao']);
         }
-        return response()->json($locacao,200);
+        return response()->json($locacao, 200);
     }
 
     /**
@@ -90,14 +99,14 @@ class LocacaoController extends Controller
     public function update(Request $request, $id)
     {
 
-        dd($request->all());
-        $locacao = $this->locacao->find($id);
+        $repository = new RepositoryLocacao($this->locacao);
+        
+        $locacao = $repository->edit($id,$request);
 
-        if($locacao == null){
+        if ($locacao == null) {
             return response()->json(['erro' => 'não foi possive encontrar a locacao']);
         }
 
-        $locacao->update($request->all());
         return response()->json($locacao, 200);
     }
 
@@ -109,13 +118,14 @@ class LocacaoController extends Controller
      */
     public function destroy($id)
     {
-        $locacao = $this->locacao->find($id);
+        $repository = new RepositoryLocacao($this->locacao);
 
-        if($locacao == null){
+        $locacao = $repository->delete($id);
+
+        if ($locacao == null) {
             return response()->json(['erro' => 'não foi possive encontrar a locacao']);
         }
 
-        $locacao->delete();
 
         return response()->json(['sucesso' => 'locacao deletada']);
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Repositories\RepositoryCliente;
 use Illuminate\Http\Request;
 
 class ClienteController extends Controller
@@ -20,7 +21,8 @@ class ClienteController extends Controller
     }
     public function index()
     {
-        $clientes = $this->cliente->all();
+        $repository = new RepositoryCliente($this->cliente);
+        $clientes = $repository->getAll();
 
         if($clientes->count() <= 0){
             return response()->json(['info' => 'não há nenhum elemento na lista']);
@@ -47,7 +49,12 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        $cliente = $this->cliente->create($request->all());
+
+        $repository = new RepositoryCliente($this->cliente);
+
+        $request->validate($this->cliente->rules(),$this->cliente->feedback());
+
+        $cliente =$repository->create($request);
 
         return response()->json($cliente,201);
     }
@@ -60,7 +67,9 @@ class ClienteController extends Controller
      */
     public function show($id)
     {
-        $cliente = $this->cliente->find($id);
+        $repository = new RepositoryCliente($this->cliente);
+
+        $cliente = $repository->get($id);
 
         if($cliente == null){
             return response()->json(['erro' => 'não ha nenhum cliente com este id'],404);
@@ -89,13 +98,13 @@ class ClienteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $cliente = $this->cliente->find($id);
+        $repository = new RepositoryCliente($this->cliente);
+
+        $cliente = $repository->edit($id,$request);
 
         if($cliente == null){
             return response()->json(['erro' => 'não ha nenhum cliente com este id'],404);
         }
-
-        $cliente->update($request->all());
         return response()->json($cliente,200);
     }
 
@@ -107,13 +116,17 @@ class ClienteController extends Controller
      */
     public function destroy($id)
     {
-        $cliente = $this->cliente->find($id);
+        $repository = new RepositoryCliente($this->cliente);
+        
 
+        $cliente = $repository->delete($id);
+       // dd($cliente);
         if($cliente == null){
             return response()->json(['erro' => 'não ha nenhum cliente com este id'],404);
+        }else if($cliente === -1){
+            return response()->json(['info'=> 'esta com um veiculo pendente']);
         }
 
-        $cliente->delete();
         return response()->json(['sucesso' => 'cliente desativado'],200);
     }
 }
