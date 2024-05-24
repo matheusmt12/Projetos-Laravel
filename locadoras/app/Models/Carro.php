@@ -28,4 +28,8 @@ class Carro extends Model
 
         return $this->belongsTo(Modelo::class,'id_modelo');
     }
+
+    public function locacoes(){
+        return $this->hasMany(Locacao::class,'id_carro'); 
+    }
 }

@@ -18,4 +18,9 @@ class Cliente extends Model
     public function feedback(){
         return ['required' => 'o campo :attribute é requerido'];
     }
+
+    public function locacoes(){
+
+        return $this->hasMany(Locacao::class,'id_cliente');
+    }
 }

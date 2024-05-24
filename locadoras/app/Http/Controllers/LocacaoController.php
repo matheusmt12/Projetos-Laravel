@@ -20,7 +20,7 @@ class LocacaoController extends Controller
      */
     public function index()
     {
-     $locacoes = $this->locacao->all();
+     $locacoes = $this->locacao->with('cliente')->with('carro')->get();
      
      if( $locacoes->count() <= 0){
         return response()->json(['erro'=> 'não ha nenhuma locacao no momento'],404);

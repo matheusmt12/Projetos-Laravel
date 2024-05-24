@@ -37,4 +37,12 @@ class Locacao extends Model
     public function feedback(){
         return ['required' => 'O campo :attribute é requerido'];
     }
+
+    public function cliente(){
+        return $this->belongsTo(Cliente::class,'id_cliente');
+    }
+
+    public function carro(){
+        return $this->belongsTo(Carro::class,'id_carro');
+    }
 }
