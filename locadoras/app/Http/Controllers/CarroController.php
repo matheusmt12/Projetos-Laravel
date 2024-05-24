@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Carro;
+use App\Repositories\RepositoryCarro;
 use Illuminate\Http\Request;
 
 class CarroController extends Controller
@@ -22,7 +23,9 @@ class CarroController extends Controller
      */
     public function index()
     {
-        $carros = $this->carro->with('locacoes')->with('modelo')->get();
+        $repository = new RepositoryCarro($this->carro);
+
+        $carros = $repository->getAll();
 
         if ($carros->count() <= 0) {
             return response()->json(['erro' => 'não há nenhum Carro'], 404);
@@ -49,14 +52,11 @@ class CarroController extends Controller
      */
     public function store(Request $request)
     {
+        $repository = new RepositoryCarro($this->carro);
 
+        $request->validate($this->carro->rules(), $this->carro->feedback());
+        $carro = $repository->create($request);
 
-        $carro = $this->carro->create([
-            'placa' => $request->placa,
-            'disponivel' => $request->disponivel,
-            'km' => $request->km,
-            'id_modelo' => $request->id_modelo
-        ]);
 
         return response()->json($carro, 201);
     }
@@ -69,7 +69,9 @@ class CarroController extends Controller
      */
     public function show($id)
     {
-        $carro = $this->carro->find($id);
+        $repository = new RepositoryCarro($this->carro);
+
+        $carro = $repository->get($id);
 
         if ($carro == null) {
             return response()->json(['erro' => 'Não foi possivel encontrar o Carro'], 404);
@@ -98,7 +100,9 @@ class CarroController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $carro = $this->carro->find($id);
+        $repository = new RepositoryCarro($this->carro);
+
+        $carro = $repository->edit($id,$request);
 
         if ($carro == null) {
             return response()->json(['erro' => 'O Carro não foi encontrado']);
@@ -116,10 +120,16 @@ class CarroController extends Controller
      */
     public function destroy($id)
     {
-        $carro = $this->carro->find($id);
+        $repository = new RepositoryCarro($this->carro);
+
+        $carro = $repository->delete($id);
 
         if ($carro == null) {
             return response()->json(['erro' => 'O Carro não foi encontrado'], 200);
+        }else if($carro == -1){
+            return response()->json(['info' => 'o carros esta alugado']);
         }
+
+        return response()->json(['sucesso' => 'carro deletado'],200);
     }
 }
