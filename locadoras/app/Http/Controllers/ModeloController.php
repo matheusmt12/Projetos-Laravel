@@ -119,6 +119,8 @@ class ModeloController extends Controller
 
         if ($modelo == null) {
             return response()->json(['erro' => 'O modelo não foi encontrado'], 200);
+        }else if($modelo == true){
+            return response()->json(['info' => 'Tem carros cadastrado neste modelo']);
         }
 
         return response()->json(['Sucesso' => 'Modelo deletado'],200);

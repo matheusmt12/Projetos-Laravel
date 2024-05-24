@@ -40,6 +40,6 @@ class Modelo extends Model
     }
 
     public function carros(){
-        $this->hasMany(Carro::class,'id_modelo');
+        return $this->hasMany(Carro::class,'id_modelo');
     }
 }

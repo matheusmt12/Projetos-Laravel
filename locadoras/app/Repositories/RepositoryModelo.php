@@ -20,6 +20,8 @@ class RepositoryModelo extends AbstractRepository
         $this->model = $this->model->find($id);
         if ($this->model == null) {
             return null;
+        }else if($this->model->carros()->count() > 0){
+            return true;
         }
         
         return $this->model->delete();
