@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Marca;
+use App\Repositories\RepositoryMarca;
 use Illuminate\Http\Request;
 
 
@@ -22,7 +23,10 @@ class MarcaController extends Controller
 
     public function index()
     {
-        $marcas = $this->marca->all();
+
+        $marcaRepository = new RepositoryMarca($this->marca);
+
+        $marcas = $marcaRepository->getAll();
         if($marcas->count() <= 0){
             return response()->json(['erro' => 'não há marcas'], 404);
         }
@@ -47,10 +51,12 @@ class MarcaController extends Controller
      */
     public function store(Request $request)
     {
-
+        $marcaRepository = new RepositoryMarca($this->marca);
         $request->validate($this->marca->rules(), $this->marca->feedback());
         
-        $marca = $this->marca->create(['name' => $request->name, 'imagem' => $request->imagem]);
+        
+        $marca = $marcaRepository->create($request); 
+        //$this->marca->create(['name' => $request->name, 'imagem' => $request->imagem]);
 
         return response()->json($marca,201);
     }
@@ -63,7 +69,8 @@ class MarcaController extends Controller
      */
     public function show($id)
     {
-        $marca = $this->marca->find($id);
+        $marcaRepository = new RepositoryMarca($this->marca);
+        $marca = $marcaRepository->get($id);
         if ($marca == null){
             return response()->json(['erro' => 'Marca não encontrada'], 404);
         }
@@ -91,13 +98,12 @@ class MarcaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
-        $marca = $this->marca->find($id);
+        $marcaRepository = new RepositoryMarca($this->marca);
+        $marca = $marcaRepository->edit($id, $request);
 
         if($marca == null){
             return response()->json(['erro'=> 'Marca não encontrada']);
         }
-        $marca->update($request->all());
 
         return response()->json($marca,200);
     }
@@ -110,10 +116,12 @@ class MarcaController extends Controller
      */
     public function destroy($id)
     {
-        $marca = $this->marca->find($id);
 
-        $marca->delete();
-
-        return response()->json(['sucesso' => 'Marca deletada']);
+        $marcaRepository = new RepositoryMarca($this->marca);
+        $marca = $marcaRepository->delete($id);
+        if($marca == null){
+            return response()->json(['erro' => 'A marca não foi encontrada'],404);
+        }
+        return response()->json(['sucesso' => 'Marca deletada'],200);
     }
 }

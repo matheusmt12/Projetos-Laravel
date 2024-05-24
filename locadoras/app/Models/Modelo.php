@@ -32,4 +32,14 @@ class Modelo extends Model
             'nome.unique' => 'o campo :attribute é unico'
         ];
     }
+
+    public function marca(){
+
+        //um pra n 
+        return $this->belongsTo(Marca::class,'id_marca');
+    }
+
+    public function carros(){
+        $this->hasMany(Carro::class,'id_modelo');
+    }
 }

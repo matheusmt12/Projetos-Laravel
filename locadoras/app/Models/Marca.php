@@ -24,4 +24,10 @@ class Marca extends Model
             'name.unique' => 'O campo :attribute é unico'
         ];
     }
+
+    public function modelos(){
+        // um pra muitos
+
+        return $this->hasMany(Modelo::class, 'id_marca');
+    }
 }

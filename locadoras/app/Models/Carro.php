@@ -23,4 +23,9 @@ class Carro extends Model
     public function feedback(){
         return ['required' => 'o campo :attribute é requerido'];
     }
+
+    public function modelo(){
+
+        return $this->belongsTo(Modelo::class,'id_modelo');
+    }
 }

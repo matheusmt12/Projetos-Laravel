@@ -22,7 +22,7 @@ class CarroController extends Controller
      */
     public function index()
     {
-        $carros = $this->carro->all();
+        $carros = $this->carro->select('id_modelo', 'placa', 'disponivel')->with('modelo:id,lugares')->where('disponivel', '=', true)->get();
 
         if ($carros->count() <= 0) {
             return response()->json(['erro' => 'não há nenhum Carro'], 404);
