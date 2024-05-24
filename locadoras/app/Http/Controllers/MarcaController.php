@@ -122,6 +122,6 @@ class MarcaController extends Controller
         if($marca == null){
             return response()->json(['erro' => 'A marca não foi encontrada'],404);
         }
-        return response()->json(['sucesso' => 'Marca deletada'],200);
+        return response()->json(['sucesso' => 'Marca deletada'],200); 
     }
 }
