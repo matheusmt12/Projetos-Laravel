@@ -6,14 +6,14 @@
                 <div class="card-header">Login</div>
 
                 <div class="card-body">
-                    <form method="POST" action="#">
+                    <form method="post" @submit.prevent="login($event)">
                         <input type="hidden" :value="csrf_token" name="_token">
 
                         <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">E-mail</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="" required autocomplete="email" autofocus>
+                                <input id="email" type="email" class="form-control" name="email" value="" v-model="email" required autocomplete="email" autofocus>
 
                                     <span class="invalid-feedback" role="alert">
                                         <strong>Invalido</strong>
@@ -26,7 +26,7 @@
                             <label for="password" class="col-md-4 col-form-label text-md-right">Senha</label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control " name="password" required autocomplete="current-password">
+                                <input id="password" type="password" class="form-control " name="password" v-model="password" required autocomplete="current-password">
 
 
                                     <span class="invalid-feedback" role="alert">
@@ -71,6 +71,35 @@
 
 <script>
     export default{
-        props: ['csrf_token']
+        props: ['csrf_token'],
+        data(){
+            return{
+                'email' : '',
+                'password' : ''
+            }
+        },
+        methods:{
+            login(e){
+                
+                let url = 'http://127.0.0.1:8000/api/login';
+                let config = {
+                    method: 'post',
+                    body: new URLSearchParams({
+                        'email': this.email,
+                        'password' : this.password
+                    })
+
+                }
+                
+                fetch(url,config).then(
+                    response => response.json()).then( data=> {
+                        if(data.token){
+                            document.cookie = 'token='+data.token+'SemeSite=lax'
+                            e.target.submit()
+                        }
+                    })
+            }
+            
+        }
     }
 </script>

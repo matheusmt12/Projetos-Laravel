@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
+
+    public function index(){
+        return view('home');
+    }
     public function login(Request $request)
     {
 
@@ -14,7 +18,7 @@ class AuthController extends Controller
         $token = auth()->attempt($credenciais);
 
         if ($token) {
-            return response()->json(['sucesso' => $token], 200);
+            return response()->json(['token' => $token], 200);
         }
 
         return response()->json(['erro' => 'usuario ou senha invalido'], 403);
