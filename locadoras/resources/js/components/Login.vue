@@ -86,16 +86,18 @@
                     method: 'post',
                     body: new URLSearchParams({
                         'email': this.email,
-                        'password' : this.password
-                    })
+                        'password' : this.password,
+                    }),
+                    headers:{
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
 
                 }
                 
                 fetch(url,config).then(
                     response => response.json()).then( data=> {
                         if(data.token){
-                            document.cookie = 'token='+data.token+'SemeSite=lax'
-                            e.target.submit()
+                            window.location.href = `/home?token=${data.token}`;
                         }
                     })
             }

@@ -6,16 +6,12 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-
-    public function index(){
-        return view('home');
-    }
     public function login(Request $request)
     {
 
         $credenciais = $request->all(['email', 'password']);
 
-        $token = auth()->attempt($credenciais);
+        $token = auth('api')->attempt($credenciais);
 
         if ($token) {
             return response()->json(['token' => $token], 200);
@@ -39,6 +35,5 @@ class AuthController extends Controller
         $token = auth('api')->refresh();
 
         return response()->json(['new token' => $token]);
-        
     }
 }

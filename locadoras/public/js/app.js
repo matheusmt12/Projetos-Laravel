@@ -2189,14 +2189,16 @@ __webpack_require__.r(__webpack_exports__);
         body: new URLSearchParams({
           'email': this.email,
           'password': this.password
-        })
+        }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
       };
       fetch(url, config).then(function (response) {
         return response.json();
       }).then(function (data) {
         if (data.token) {
-          document.cookie = 'token=' + data.token + 'SemeSite=lax';
-          e.target.submit();
+          window.location.href = "/home?token=".concat(data.token);
         }
       });
     }
