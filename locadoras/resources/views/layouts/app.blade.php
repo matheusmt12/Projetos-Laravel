@@ -15,7 +15,6 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
@@ -47,7 +46,7 @@
 
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                     <a class="dropdown-item" href="#">Carro</a>
-                                    <a class="dropdown-item" href="#">Marca</a>
+                                    <a class="dropdown-item" href="#"  onclick="getMarca()">Marca</a>
                                     <a class="dropdown-item" href="#">Modelo</a>
                                 </div>
                             </li>
@@ -98,4 +97,19 @@
         </main>
     </div>
 </body>
+<script>
+
+    function getMarca(){
+
+        
+        console.log('ewfeaa');
+        const urlToken = new URLSearchParams(window.location.search);
+        let token =urlToken.get('token')
+        console.log(token);
+        window.location.href = `/marca?token=${token}`;
+        
+
+    }
+</script>
 </html>
+

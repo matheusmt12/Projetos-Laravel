@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use PhpParser\Node\Expr\FuncCall;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +19,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
 Auth::routes();
+
+
+
+Route::get('/marca',function(){
+    return view('app\marca');
+})->middleware('jwt.auth');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware('jwt.auth');

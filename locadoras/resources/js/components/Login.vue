@@ -6,7 +6,7 @@
                 <div class="card-header">Login</div>
 
                 <div class="card-body">
-                    <form method="post" @submit.prevent="login($event)">
+                    <form method="post" @submit.prevent="login()">
                         <input type="hidden" :value="csrf_token" name="_token">
 
                         <div class="form-group row">
@@ -79,7 +79,7 @@
             }
         },
         methods:{
-            login(e){
+            login(){
                 
                 let url = 'http://127.0.0.1:8000/api/login';
                 let config = {
@@ -97,6 +97,8 @@
                 fetch(url,config).then(
                     response => response.json()).then( data=> {
                         if(data.token){
+
+                            document.cookie = 'token='+data.token+';SameSite=lax';
                             window.location.href = `/home?token=${data.token}`;
                         }
                     })
