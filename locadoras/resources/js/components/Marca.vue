@@ -4,18 +4,23 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">Buscar Marca</div>
-
-                    <div class="card-body">
-                          <div class="mb-3">
-                            <label for="exampleInputEmail1" class="form-label">Email address</label>
-                            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="exampleInputPassword1">
+                    
+                        <div class="card-body">
+                            <div class=" form row">
+                                <div class="col mb-3">
+                                <label for="buscarMarca" class="form-label">Id</label>
+                                <input type="number" class="form-control" id="idMarca" aria-describedby="idHelpe">
+                                <div id="idHelpe" class="form-text text muted">Opicional. Informe o id </div>
+                            </div>
+                            <div class="mb-3 col">
+                                <label for="nomeMarca" class="form-label">Nome da Marca</label>
+                                <input type="text" class="form-control" id="nomeMarca">
+                            </div>
                         </div>
                     </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary btn-sm float-right">Pesquisar</button>
+                        </div>
                 </div>
             </div>
         </div>

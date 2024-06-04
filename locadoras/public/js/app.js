@@ -2285,6 +2285,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   mounted: function mounted() {
@@ -38167,47 +38172,60 @@ var staticRenderFns = [
             _c("div", { staticClass: "card-header" }, [_vm._v("Buscar Marca")]),
             _vm._v(" "),
             _c("div", { staticClass: "card-body" }, [
-              _c("div", { staticClass: "mb-3" }, [
-                _c(
-                  "label",
-                  {
-                    staticClass: "form-label",
-                    attrs: { for: "exampleInputEmail1" },
-                  },
-                  [_vm._v("Email address")]
-                ),
+              _c("div", { staticClass: "form row" }, [
+                _c("div", { staticClass: "col mb-3" }, [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "form-label",
+                      attrs: { for: "buscarMarca" },
+                    },
+                    [_vm._v("Id")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "number",
+                      id: "idMarca",
+                      "aria-describedby": "idHelpe",
+                    },
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-text text muted",
+                      attrs: { id: "idHelpe" },
+                    },
+                    [_vm._v("Opicional. Informe o id ")]
+                  ),
+                ]),
                 _vm._v(" "),
-                _c("input", {
-                  staticClass: "form-control",
-                  attrs: {
-                    type: "email",
-                    id: "exampleInputEmail1",
-                    "aria-describedby": "emailHelp",
-                  },
-                }),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "form-text", attrs: { id: "emailHelp" } },
-                  [_vm._v("We'll never share your email with anyone else.")]
-                ),
+                _c("div", { staticClass: "mb-3 col" }, [
+                  _c(
+                    "label",
+                    { staticClass: "form-label", attrs: { for: "nomeMarca" } },
+                    [_vm._v("Nome da Marca")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    staticClass: "form-control",
+                    attrs: { type: "text", id: "nomeMarca" },
+                  }),
+                ]),
               ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "mb-3" }, [
-                _c(
-                  "label",
-                  {
-                    staticClass: "form-label",
-                    attrs: { for: "exampleInputPassword1" },
-                  },
-                  [_vm._v("Password")]
-                ),
-                _vm._v(" "),
-                _c("input", {
-                  staticClass: "form-control",
-                  attrs: { type: "password", id: "exampleInputPassword1" },
-                }),
-              ]),
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-footer" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary btn-sm float-right",
+                  attrs: { type: "submit" },
+                },
+                [_vm._v("Pesquisar")]
+              ),
             ]),
           ]),
         ]),
