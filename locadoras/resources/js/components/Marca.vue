@@ -33,18 +33,97 @@
                         </table-component>
                     </template>
                     <template v-slot:rodape>
-                            <button type="button" class="btn btn-primary btn-sm float-right">Adicionar</button>      
+                            <button type="button" class="btn btn-primary btn-sm float-right" data-bs-toggle="modal" data-bs-target="#modalMarca">Adicionar</button>      
                     </template>
                 </card-component>
             </div>
         </div>
+        <!-- Modal -->
+        <modal-component id="modalMarca" titulo="Adicionar Marca">
+            <template v-slot:alertas>
+                <alert-component tipo="success" v-if="statusRequest == 'Adicionado'" :detalhes="detalhesRequest" titulo="Sucesso ao cadastrar a marca"></alert-component> 
+                <alert-component tipo="danger" v-if="statusRequest == 'Erro'" :detalhes="detalhesRequest" titulo="Falha ao salvar"></alert-component>
+            </template>
+            <template v-slot:conteudo>
+                <div class="form-group">
+                    <inputcontainer-component id="idNome" titulo="Nome" idHelpe="idHelpe" tituloAjuda="Obrigatorio. Informe o nome " >
+                        <input type="text" class="form-control" id="idNomeMarcaAdd" aria-describedby="idHelpe"v-model="nomeMarca">
+                    </inputcontainer-component>
+                </div>
+                <div class="form-group">
+                    <inputcontainer-component id="idImagem" titulo="Imagem" idHelpe="idHelpeimagem" tituloAjuda="Obrigatorio. Informe a imagem ">
+                        <input type="text" class="form-control" id="idImagem" aria-describedby="idHelpeimagem" v-model="imagemMarca">
+                    </inputcontainer-component>
+                </div>
+            </template>
+            <template v-slot:rodape>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary" @click="Salvar()">Salvar</button>
+            </template>
+        </modal-component>
     </div>
 </template>
 
 <script>
+import axios from 'axios';
     export default {
-        mounted() {
-            console.log('Component mounted.')
+        data(){
+            return {
+                url : 'http://127.0.0.1:8000/api/v1/marca',
+                nomeMarca :'',
+                imagemMarca:'',
+                statusRequest : '',
+                detalhesRequest : {},
+                marcas : []
+            }
+        },
+        methods:{
+            carregarDados(){
+                const urlToken = new URLSearchParams(window.location.search);
+   
+                axios.get(this.url).then(response => {
+                    this.marcas = response.data
+                }).catch(erro=>{console.log(erro.response.data);})
+            },
+
+            Salvar(){
+                //formData/ append
+                //axios.post(<url>, <conteudo>,<config>)
+
+                let formdata = new FormData();
+
+                formdata.append('name' , this.nomeMarca);
+                formdata.append('imagem', this.imagemMarca);
+                
+                //pegar token 
+                const urlToken = new URLSearchParams(window.location.search);
+                let token =urlToken.get('token')
+
+                let config = {
+                    headers :{
+                        'Content-Type' : 'multipart/form-data',
+                        'Accept' : 'application/json',
+                    }
+                }
+                //console.log(config);
+                axios.post(this.url,formdata,config)
+                    .then(response => {
+                        this.statusRequest = 'Adicionado';
+                        this.detalhesRequest ={
+                            mensagem : 'Id Registro ' + response.data.id
+                        } 
+                    })
+                    .catch(erro =>{ 
+                        this.statusRequest = 'Erro'
+                        this.detalhesRequest = {
+                            mensagem : erro.response.data.message,
+                            dados : erro.response.data.errors
+                        }
+                    });
+            }
+        },
+        mounted (){
+            this.carregarDados()
         }
     }
 </script>
