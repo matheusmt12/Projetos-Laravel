@@ -28,7 +28,7 @@
             <div class="col-md-8">
                 <card-component titulo="Listagem de Marca">
                     <template v-slot:conteudo>
-                        <table-component>
+                        <table-component :dados="marcas" idMarca="ID" :titulos="['id','nome','imagem']">
                                 
                         </table-component>
                     </template>
