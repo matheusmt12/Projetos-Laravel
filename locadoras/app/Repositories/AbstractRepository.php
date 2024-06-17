@@ -16,7 +16,11 @@ class AbstractRepository{
 
 
     public function getAll(){
-        return $this->model->all();
+        return $this->model->paginate();
+    }
+    
+    public function getAllPaginate($numPage){
+        return $this->model->paginate($numPage);
     }
 
     public function create($request){

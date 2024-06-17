@@ -28,12 +28,21 @@
             <div class="col-md-8">
                 <card-component titulo="Listagem de Marca">
                     <template v-slot:conteudo>
-                        <table-component :dados="marcas" idMarca="ID" :titulos="['id','nome','imagem']">
+                        <table-component :dados="marcas.data" idMarca="ID" :titulos="['id','name','imagem']">
                                 
                         </table-component>
                     </template>
                     <template v-slot:rodape>
-                            <button type="button" class="btn btn-primary btn-sm float-right" data-bs-toggle="modal" data-bs-target="#modalMarca">Adicionar</button>      
+                        <div class="row">
+                            <div class="col-10"><paginate-component>
+                                <li v-for="l,key in marcas.links" :key="key" :class=" l.active ? 'page-item active' : 'page-item' "><a class="page-link" v-html="l.label" @click="paginacao(l)"></a></li>
+                            </paginate-component></div>
+                            <div class="col">
+                                <button type="button" class="btn btn-primary btn-sm float-right" data-bs-toggle="modal" data-bs-target="#modalMarca">Adicionar</button>   
+                            </div>
+                            
+                        </div>
+   
                     </template>
                 </card-component>
             </div>
@@ -78,11 +87,16 @@ import axios from 'axios';
             }
         },
         methods:{
+            paginacao(l){
+                if(l.url){
+                this.url = l.url;
+                this.carregarDados();}
+            },
             carregarDados(){
-                const urlToken = new URLSearchParams(window.location.search);
    
                 axios.get(this.url).then(response => {
                     this.marcas = response.data
+                    console.log(this.marcas);
                 }).catch(erro=>{console.log(erro.response.data);})
             },
 

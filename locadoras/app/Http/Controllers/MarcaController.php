@@ -26,7 +26,7 @@ class MarcaController extends Controller
 
         $marcaRepository = new RepositoryMarca($this->marca);
 
-        $marcas = $marcaRepository->getAll();
+        $marcas = $marcaRepository->getAllPaginate(3);
         if($marcas->count() <= 0){
             return response()->json(['erro' => 'não há marcas'], 404);
         }
