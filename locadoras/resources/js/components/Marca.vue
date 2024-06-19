@@ -8,19 +8,19 @@
                         <div class=" form row">
                                 <div class="col mb-3">
                                     <inputcontainer-component id="id" titulo="ID" idHelpe="idHelpe" tituloAjuda="Opicional. Informe o id ">
-                                        <input type="number" class="form-control" id="idMarca" aria-describedby="idHelpe">
+                                        <input type="number" class="form-control" id="idMarca" aria-describedby="idHelpe" v-model="busca.id">
                                     </inputcontainer-component>
                                </div>
                                 <div class="mb-3 col">
 
                                     <inputcontainer-component id="idNomeMarca" titulo="Nome Marca" idHelpe="idHelpeNomeMArca" tituloAjuda="Opicional. Informe o nome da Marca ">
-                                            <input type="text" class="form-control" id="idnomeMarca" aria-describedby="idHelpe">
+                                            <input type="text" class="form-control" id="idnomeMarca" aria-describedby="idHelpe" v-model="busca.name">
                                     </inputcontainer-component>
                                 </div>
                             </div>
                     </template>
                     <template v-slot:rodape>
-                            <button type="submit" class="btn btn-primary btn-sm float-right">Pesquisar</button>
+                            <button type="submit" class="btn btn-primary btn-sm float-right" @click="pesquisar()">Pesquisar</button>
                     </template>
                 </card-component>
             </div>
@@ -28,7 +28,13 @@
             <div class="col-md-8">
                 <card-component titulo="Listagem de Marca">
                     <template v-slot:conteudo>
-                        <table-component :dados="marcas.data" idMarca="ID" :titulos="['id','name','imagem']">
+                        <table-component 
+                        :dados="marcas.data" idMarca="ID" 
+                        :titulos="['id','name','imagem']"
+                        :visualizacao="true"
+                        :editar="true"
+                        :apagar="true"
+                        >
                                 
                         </table-component>
                     </template>
@@ -79,24 +85,54 @@ import axios from 'axios';
         data(){
             return {
                 url : 'http://127.0.0.1:8000/api/v1/marca',
+                urlPaginate : '',
+                urlFilter : '',
                 nomeMarca :'',
                 imagemMarca:'',
                 statusRequest : '',
                 detalhesRequest : {},
-                marcas : []
+                marcas : [],
+                busca: {
+                    name: '',
+                    id: ''
+                }
             }
         },
         methods:{
+            pesquisar(){
+                let filtro = '';
+
+                
+                for(let chave in this.busca){
+                    if(this.busca[chave]){
+                        if (filtro != '') {
+                            filtro += ';';
+                        }
+                        filtro += chave +':like:' + this.busca[chave];
+                    }
+                }
+                if (filtro != '') {
+                    this.urlPaginate = 'page=1';
+                    this.urlFilter = '&filter='+filtro;
+                }else{
+                    this.urlFilter = '';
+                }
+                this.carregarDados();
+            },
             paginacao(l){
+
+
                 if(l.url){
-                this.url = l.url;
-                this.carregarDados();}
+                   // this.url = l.url;
+                    this.urlPaginate = l.url.split('?')[1]
+                    this.carregarDados();
+                }
             },
             carregarDados(){
-   
-                axios.get(this.url).then(response => {
+                let urlUse = this.url+ '?' + this.urlPaginate + this.urlFilter;
+                console.log(urlUse);
+                axios.get(urlUse).then(response => {
                     this.marcas = response.data
-                    console.log(this.marcas);
                 }).catch(erro=>{console.log(erro.response.data);})
             },
 

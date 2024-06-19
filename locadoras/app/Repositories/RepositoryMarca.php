@@ -14,6 +14,7 @@ class RepositoryMarca extends AbstractRepository
         $this->model = $model;
     }
 
+
     public function delete($id)
     {
 

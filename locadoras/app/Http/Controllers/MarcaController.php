@@ -21,16 +21,18 @@ class MarcaController extends Controller
         $this->marca = $marca;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-
+        
         $marcaRepository = new RepositoryMarca($this->marca);
 
-        $marcas = $marcaRepository->getAllPaginate(3);
-        if($marcas->count() <= 0){
-            return response()->json(['erro' => 'não há marcas'], 404);
+        $marcas = array();
+        $marcaRepository->selectModelosMarca('modelos');
+        if($request->has('filter')){
+           $marcaRepository->filtro($request->filter);
         }
-        return response()->json($marcas,200);
+
+        return response()->json($marcaRepository->getResultPaginate(3),200);
     }
 
     /**

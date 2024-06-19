@@ -4,7 +4,6 @@
             <thead>
                 <tr>
                     <th scope="col" v-for="t in titulos" :key="t" class="text-capitalize">{{ t }}</th>
-
                 </tr>
             </thead>
             <tbody>
@@ -12,9 +11,13 @@
                     <td v-if="titulos.includes(chave)" v-for="valor, chave in obj" :key="valor">
                          {{ valor }}
                     </td>
-                <!-- <th scope="row">{{ m.id }}</th>
-                    <td>{{ m.name}}</td>
-                    <td>{{ m.imagem}}</td> -->
+                    <td>
+                        <button v-if="visualizacao" type="button" class="btn btn-info btn-sm">Visualizar</button>
+                    </td>                    <td>
+                        <button type="button" class="btn btn-secondary btn-sm">Editar</button>
+                    </td>                    <td>
+                        <button type="button" class="btn btn-danger btn-sm">Apagar</button>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -23,6 +26,6 @@
 
 <script>
     export default {
-        props :['dados' , 'titulos']
+        props :['dados' , 'titulos','visualizacao','editar','apagar']
     }
 </script>

@@ -2429,31 +2429,63 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       url: 'http://127.0.0.1:8000/api/v1/marca',
+      urlPaginate: '',
+      urlFilter: '',
       nomeMarca: '',
       imagemMarca: '',
       statusRequest: '',
       detalhesRequest: {},
-      marcas: []
+      marcas: [],
+      busca: {
+        name: '',
+        id: ''
+      }
     };
   },
   methods: {
+    pesquisar: function pesquisar() {
+      var filtro = '';
+      for (var chave in this.busca) {
+        if (this.busca[chave]) {
+          if (filtro != '') {
+            filtro += ';';
+          }
+          filtro += chave + ':like:' + this.busca[chave];
+        }
+      }
+      if (filtro != '') {
+        this.urlPaginate = 'page=1';
+        this.urlFilter = '&filter=' + filtro;
+      } else {
+        this.urlFilter = '';
+      }
+      this.carregarDados();
+    },
     paginacao: function paginacao(l) {
       if (l.url) {
-        this.url = l.url;
+        // this.url = l.url;
+        this.urlPaginate = l.url.split('?')[1];
         this.carregarDados();
       }
     },
     carregarDados: function carregarDados() {
       var _this = this;
-      axios__WEBPACK_IMPORTED_MODULE_0___default().get(this.url).then(function (response) {
+      var urlUse = this.url + '?' + this.urlPaginate + this.urlFilter;
+      console.log(urlUse);
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get(urlUse).then(function (response) {
         _this.marcas = response.data;
-        console.log(_this.marcas);
       })["catch"](function (erro) {
         console.log(erro.response.data);
       });
@@ -2596,9 +2628,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['dados', 'titulos']
+  props: ['dados', 'titulos', 'visualizacao', 'editar', 'apagar']
 });
 
 /***/ }),
@@ -39043,11 +39078,32 @@ var render = function () {
                               },
                               [
                                 _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.busca.id,
+                                      expression: "busca.id",
+                                    },
+                                  ],
                                   staticClass: "form-control",
                                   attrs: {
                                     type: "number",
                                     id: "idMarca",
                                     "aria-describedby": "idHelpe",
+                                  },
+                                  domProps: { value: _vm.busca.id },
+                                  on: {
+                                    input: function ($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.busca,
+                                        "id",
+                                        $event.target.value
+                                      )
+                                    },
                                   },
                                 }),
                               ]
@@ -39073,11 +39129,32 @@ var render = function () {
                               },
                               [
                                 _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.busca.name,
+                                      expression: "busca.name",
+                                    },
+                                  ],
                                   staticClass: "form-control",
                                   attrs: {
                                     type: "text",
                                     id: "idnomeMarca",
                                     "aria-describedby": "idHelpe",
+                                  },
+                                  domProps: { value: _vm.busca.name },
+                                  on: {
+                                    input: function ($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.busca,
+                                        "name",
+                                        $event.target.value
+                                      )
+                                    },
                                   },
                                 }),
                               ]
@@ -39099,6 +39176,11 @@ var render = function () {
                         {
                           staticClass: "btn btn-primary btn-sm float-right",
                           attrs: { type: "submit" },
+                          on: {
+                            click: function ($event) {
+                              return _vm.pesquisar()
+                            },
+                          },
                         },
                         [_vm._v("Pesquisar")]
                       ),
@@ -39128,6 +39210,9 @@ var render = function () {
                           dados: _vm.marcas.data,
                           idMarca: "ID",
                           titulos: ["id", "name", "imagem"],
+                          visualizacao: true,
+                          editar: true,
+                          apagar: true,
                         },
                       }),
                     ]
@@ -39514,18 +39599,37 @@ var render = function () {
           return _c(
             "tr",
             { key: obj.id },
-            _vm._l(obj, function (valor, chave) {
-              return _vm.titulos.includes(chave)
-                ? _c("td", { key: valor }, [
-                    _vm._v(
-                      "\n                     " +
-                        _vm._s(valor) +
-                        "\n                "
-                    ),
-                  ])
-                : _vm._e()
-            }),
-            0
+            [
+              _vm._l(obj, function (valor, chave) {
+                return _vm.titulos.includes(chave)
+                  ? _c("td", { key: valor }, [
+                      _vm._v(
+                        "\n                     " +
+                          _vm._s(valor) +
+                          "\n                "
+                      ),
+                    ])
+                  : _vm._e()
+              }),
+              _vm._v(" "),
+              _c("td", [
+                _vm.visualizacao
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-info btn-sm",
+                        attrs: { type: "button" },
+                      },
+                      [_vm._v("Visualizar")]
+                    )
+                  : _vm._e(),
+              ]),
+              _vm._v(" "),
+              _vm._m(0, true),
+              _vm._v(" "),
+              _vm._m(1, true),
+            ],
+            2
           )
         }),
         0
@@ -39533,7 +39637,32 @@ var render = function () {
     ]),
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [
+      _c(
+        "button",
+        { staticClass: "btn btn-secondary btn-sm", attrs: { type: "button" } },
+        [_vm._v("Editar")]
+      ),
+    ])
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [
+      _c(
+        "button",
+        { staticClass: "btn btn-danger btn-sm", attrs: { type: "button" } },
+        [_vm._v("Apagar")]
+      ),
+    ])
+  },
+]
 render._withStripped = true
 
 

@@ -16,10 +16,11 @@ class AbstractRepository{
 
 
     public function getAll(){
-        return $this->model->paginate();
+        return $this->model->get();
     }
     
     public function getAllPaginate($numPage){
+        
         return $this->model->paginate($numPage);
     }
 
@@ -41,4 +42,24 @@ class AbstractRepository{
         return $this->model;
     }
 
+    public function filtro($request){
+        $filtros = explode(';',$request);
+            
+        foreach( $filtros as $key => $condicao){
+            $c= explode(':',$condicao);
+            
+             $this->model = $this->model->where($c[0],$c[1],$c[2]);
+        }
+    }
+    public function selectModelosMarca($modelo){
+         $this->model = $this->model->with($modelo);
+    }
+
+    public function getResult(){
+        return $this->model->get();
+    }
+
+    public function getResultPaginate($numPag){
+        return $this->model->paginate($numPag);
+    }
 }
