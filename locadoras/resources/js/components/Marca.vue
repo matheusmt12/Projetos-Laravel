@@ -53,7 +53,7 @@
                 </card-component>
             </div>
         </div>
-        <!-- Modal -->
+        <!-- Modal de incluir marca -->
         <modal-component id="modalMarca" titulo="Adicionar Marca">
             <template v-slot:alertas>
                 <alert-component tipo="success" v-if="statusRequest == 'Adicionado'" :detalhes="detalhesRequest" titulo="Sucesso ao cadastrar a marca"></alert-component> 
@@ -76,11 +76,47 @@
                 <button type="button" class="btn btn-primary" @click="Salvar()">Salvar</button>
             </template>
         </modal-component>
+        <!-- Fim modal de incluir marca -->
+        <!-- Inicio modal para visualizar -->
+        <modal-component id="modalMarcaVisualizar" titulo="Visualizar Marca">
+            <template v-slot:alertas></template>
+            <template v-slot:conteudo>
+                <inputcontainer-component titulo="ID">
+                    <input type="text" class="form-control" :value="$store.state.item.id" disabled>
+                </inputcontainer-component>
+                <inputcontainer-component titulo="Nome da marca">
+                    <input type="text" class="form-control" :value="$store.state.item.name" disabled>
+                </inputcontainer-component>
+            </template>
+            <template v-slot:rodape>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </template>
+        </modal-component>
+        <!-- fim modal de Apagar-->
+        <modal-component id="modalMarcaDeletar" titulo="Deletar Marca">
+            <template v-slot:alertas></template>
+            <template v-slot:conteudo>
+                <inputcontainer-component titulo="ID">
+                    <input type="text" class="form-control" :value="$store.state.item.id" disabled>
+                </inputcontainer-component>
+                <inputcontainer-component titulo="Nome da marca">
+                    <input type="text" class="form-control" :value="$store.state.item.name" disabled>
+                </inputcontainer-component>
+            </template>
+            <template v-slot:rodape>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-danger" @click="remover($store.state.item.id)">Apagar</button>
+            </template>
+        </modal-component>
+        <!-- Fim modal apagar -->
     </div>
+
 </template>
 
 <script>
 import axios from 'axios';
+import { error } from 'jquery';
+import { remove } from 'lodash';
     export default {
         data(){
             return {
@@ -99,6 +135,20 @@ import axios from 'axios';
             }
         },
         methods:{
+            remover(id){
+                const confirme = confirm('Voce deseja remover esta marca ?');
+                if(!confirme){
+                    return false;
+                }
+                let urlDelete = this.url + '/' + id
+                console.log(urlDelete);
+                axios.delete(urlDelete).then(response => {
+                    console.log(response.data);
+                    this.carregarDados()
+                }).catch(
+                    error => console.log(error)
+                )
+            },
             pesquisar(){
                 let filtro = '';
 
@@ -120,8 +170,6 @@ import axios from 'axios';
                 this.carregarDados();
             },
             paginacao(l){
-
-
                 if(l.url){
                    // this.url = l.url;
                     this.urlPaginate = l.url.split('?')[1]
@@ -145,23 +193,14 @@ import axios from 'axios';
                 formdata.append('name' , this.nomeMarca);
                 formdata.append('imagem', this.imagemMarca);
                 
-                //pegar token 
-                const urlToken = new URLSearchParams(window.location.search);
-                let token =urlToken.get('token')
-
-                let config = {
-                    headers :{
-                        'Content-Type' : 'multipart/form-data',
-                        'Accept' : 'application/json',
-                    }
-                }
                 //console.log(config);
-                axios.post(this.url,formdata,config)
+                axios.post(this.url,formdata)
                     .then(response => {
                         this.statusRequest = 'Adicionado';
                         this.detalhesRequest ={
                             mensagem : 'Id Registro ' + response.data.id
-                        } 
+                        }
+                        this.carregarDados()
                     })
                     .catch(erro =>{ 
                         this.statusRequest = 'Erro'

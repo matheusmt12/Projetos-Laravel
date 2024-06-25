@@ -12,11 +12,11 @@
                          {{ valor }}
                     </td>
                     <td>
-                        <button v-if="visualizacao" type="button" class="btn btn-info btn-sm">Visualizar</button>
+                        <button v-if="visualizacao" type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalMarcaVisualizar" @click="setStore(obj)">Visualizar</button>
                     </td>                    <td>
                         <button type="button" class="btn btn-secondary btn-sm">Editar</button>
                     </td>                    <td>
-                        <button type="button" class="btn btn-danger btn-sm">Apagar</button>
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalMarcaDeletar"  @click="setStore(obj)">Apagar</button>
                     </td>
                 </tr>
             </tbody>
@@ -26,6 +26,12 @@
 
 <script>
     export default {
-        props :['dados' , 'titulos','visualizacao','editar','apagar']
+        props :['dados' , 'titulos','visualizacao','editar','apagar'],
+        methods :{
+            setStore(obj){
+                this.$store.state.item = obj;
+                
+            }
+        }
     }
 </script>
