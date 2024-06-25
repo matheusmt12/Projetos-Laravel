@@ -94,7 +94,10 @@
         </modal-component>
         <!-- fim modal de Apagar-->
         <modal-component id="modalMarcaDeletar" titulo="Deletar Marca">
-            <template v-slot:alertas></template>
+            <template v-slot:alertas>
+                <alert-component tipo="success" v-if="statusRequest == 'Remove'" :detalhes="detalhesRequest" titulo="Sucesso ao cadastrar a marca"></alert-component> 
+                <alert-component tipo="danger" v-if="statusRequest == 'ErroRemove'" :detalhes="detalhesRequest" titulo="Falha ao salvar"></alert-component>
+            </template>
             <template v-slot:conteudo>
                 <inputcontainer-component titulo="ID">
                     <input type="text" class="form-control" :value="$store.state.item.id" disabled>
@@ -143,10 +146,19 @@ import { remove } from 'lodash';
                 let urlDelete = this.url + '/' + id
                 console.log(urlDelete);
                 axios.delete(urlDelete).then(response => {
-                    console.log(response.data);
+                    this.statusRequest = 'Remove';
+                        this.detalhesRequest ={
+                            mensagem : 'Marca removida com o id: ' + id 
+                        }
                     this.carregarDados()
                 }).catch(
-                    error => console.log(error)
+                    erro=> {
+                        this.statusRequest = 'ErroRemove'
+                        this.detalhesRequest = {
+                            mensagem : erro.response.data.message,
+                            dados : erro.response.data.errors
+                        }
+                    }
                 )
             },
             pesquisar(){
@@ -200,6 +212,8 @@ import { remove } from 'lodash';
                         this.detalhesRequest ={
                             mensagem : 'Id Registro ' + response.data.id
                         }
+                        this.nomeMarca = '';
+                        this.imagemMarca = '';
                         this.carregarDados()
                     })
                     .catch(erro =>{ 

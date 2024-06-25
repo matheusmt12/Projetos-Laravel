@@ -2473,6 +2473,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -2504,10 +2507,17 @@ __webpack_require__.r(__webpack_exports__);
       var urlDelete = this.url + '/' + id;
       console.log(urlDelete);
       axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"](urlDelete).then(function (response) {
-        console.log(response.data);
+        _this.statusRequest = 'Remove';
+        _this.detalhesRequest = {
+          mensagem: 'Marca removida com o id: ' + id
+        };
         _this.carregarDados();
-      })["catch"](function (error) {
-        return console.log(error);
+      })["catch"](function (erro) {
+        _this.statusRequest = 'ErroRemove';
+        _this.detalhesRequest = {
+          mensagem: erro.response.data.message,
+          dados: erro.response.data.errors
+        };
       });
     },
     pesquisar: function pesquisar() {
@@ -2560,6 +2570,8 @@ __webpack_require__.r(__webpack_exports__);
         _this3.detalhesRequest = {
           mensagem: 'Id Registro ' + response.data.id
         };
+        _this3.nomeMarca = '';
+        _this3.imagemMarca = '';
         _this3.carregarDados();
       })["catch"](function (erro) {
         _this3.statusRequest = 'Erro';
@@ -39570,7 +39582,27 @@ var render = function () {
           {
             key: "alertas",
             fn: function () {
-              return undefined
+              return [
+                _vm.statusRequest == "Remove"
+                  ? _c("alert-component", {
+                      attrs: {
+                        tipo: "success",
+                        detalhes: _vm.detalhesRequest,
+                        titulo: "Sucesso ao cadastrar a marca",
+                      },
+                    })
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.statusRequest == "ErroRemove"
+                  ? _c("alert-component", {
+                      attrs: {
+                        tipo: "danger",
+                        detalhes: _vm.detalhesRequest,
+                        titulo: "Falha ao salvar",
+                      },
+                    })
+                  : _vm._e(),
+              ]
             },
             proxy: true,
           },
