@@ -2476,6 +2476,51 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2498,23 +2543,46 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    remover: function remover(id) {
+    Edit: function Edit() {
       var _this = this;
+      var urlEdit = this.url + '/' + this.$store.state.item.id;
+      var name = document.getElementById('idNomeMarcaEdit').value;
+      var image = document.getElementById('idImagemEdit').value;
+      var data = {
+        name: name,
+        imagem: image
+      };
+      axios__WEBPACK_IMPORTED_MODULE_0___default().put(urlEdit, data).then(function (response) {
+        _this.statusRequest = 'Editado';
+        _this.detalhesRequest = {
+          mensagem: 'Marca Editada com sucesso'
+        };
+        console.log(response);
+      })["catch"](function (erro) {
+        _this.statusRequest = 'ErroEdit';
+        _this.detalhesRequest = {
+          mensagem: erro.response.data.message,
+          dados: erro.response.data.errors
+        };
+      });
+      this.carregarDados();
+    },
+    remover: function remover(id) {
+      var _this2 = this;
       var confirme = confirm('Voce deseja remover esta marca ?');
       if (!confirme) {
         return false;
       }
       var urlDelete = this.url + '/' + id;
-      console.log(urlDelete);
       axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"](urlDelete).then(function (response) {
-        _this.statusRequest = 'Remove';
-        _this.detalhesRequest = {
+        _this2.statusRequest = 'Remove';
+        _this2.detalhesRequest = {
           mensagem: 'Marca removida com o id: ' + id
         };
-        _this.carregarDados();
+        _this2.carregarDados();
       })["catch"](function (erro) {
-        _this.statusRequest = 'ErroRemove';
-        _this.detalhesRequest = {
+        _this2.statusRequest = 'ErroRemove';
+        _this2.detalhesRequest = {
           mensagem: erro.response.data.message,
           dados: erro.response.data.errors
         };
@@ -2546,17 +2614,17 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     carregarDados: function carregarDados() {
-      var _this2 = this;
+      var _this3 = this;
       var urlUse = this.url + '?' + this.urlPaginate + this.urlFilter;
       console.log(urlUse);
       axios__WEBPACK_IMPORTED_MODULE_0___default().get(urlUse).then(function (response) {
-        _this2.marcas = response.data;
+        _this3.marcas = response.data;
       })["catch"](function (erro) {
         console.log(erro.response.data);
       });
     },
     Salvar: function Salvar() {
-      var _this3 = this;
+      var _this4 = this;
       //formData/ append
       //axios.post(<url>, <conteudo>,<config>)
 
@@ -2566,16 +2634,16 @@ __webpack_require__.r(__webpack_exports__);
 
       //console.log(config);
       axios__WEBPACK_IMPORTED_MODULE_0___default().post(this.url, formdata).then(function (response) {
-        _this3.statusRequest = 'Adicionado';
-        _this3.detalhesRequest = {
+        _this4.statusRequest = 'Adicionado';
+        _this4.detalhesRequest = {
           mensagem: 'Id Registro ' + response.data.id
         };
-        _this3.nomeMarca = '';
-        _this3.imagemMarca = '';
-        _this3.carregarDados();
+        _this4.nomeMarca = '';
+        _this4.imagemMarca = '';
+        _this4.carregarDados();
       })["catch"](function (erro) {
-        _this3.statusRequest = 'Erro';
-        _this3.detalhesRequest = {
+        _this4.statusRequest = 'Erro';
+        _this4.detalhesRequest = {
           mensagem: erro.response.data.message,
           dados: erro.response.data.errors
         };
@@ -39665,6 +39733,226 @@ var render = function () {
           },
         ]),
       }),
+      _vm._v(" "),
+      _c("modal-component", {
+        attrs: { id: "modalMarcaDeletar", titulo: "Deletar Marca" },
+        scopedSlots: _vm._u([
+          {
+            key: "alertas",
+            fn: function () {
+              return [
+                _vm.statusRequest == "Remove"
+                  ? _c("alert-component", {
+                      attrs: {
+                        tipo: "success",
+                        detalhes: _vm.detalhesRequest,
+                        titulo: "Sucesso ao cadastrar a marca",
+                      },
+                    })
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.statusRequest == "ErroRemove"
+                  ? _c("alert-component", {
+                      attrs: {
+                        tipo: "danger",
+                        detalhes: _vm.detalhesRequest,
+                        titulo: "Falha ao salvar",
+                      },
+                    })
+                  : _vm._e(),
+              ]
+            },
+            proxy: true,
+          },
+          {
+            key: "conteudo",
+            fn: function () {
+              return [
+                _c("inputcontainer-component", { attrs: { titulo: "ID" } }, [
+                  _c("input", {
+                    staticClass: "form-control",
+                    attrs: { type: "text", disabled: "" },
+                    domProps: { value: _vm.$store.state.item.id },
+                  }),
+                ]),
+                _vm._v(" "),
+                _c(
+                  "inputcontainer-component",
+                  { attrs: { titulo: "Nome da marca" } },
+                  [
+                    _c("input", {
+                      staticClass: "form-control",
+                      attrs: { type: "text", disabled: "" },
+                      domProps: { value: _vm.$store.state.item.name },
+                    }),
+                  ]
+                ),
+              ]
+            },
+            proxy: true,
+          },
+          {
+            key: "rodape",
+            fn: function () {
+              return [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: { type: "button", "data-bs-dismiss": "modal" },
+                  },
+                  [_vm._v("Fechar")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-danger",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function ($event) {
+                        return _vm.remover(_vm.$store.state.item.id)
+                      },
+                    },
+                  },
+                  [_vm._v("Apagar")]
+                ),
+              ]
+            },
+            proxy: true,
+          },
+        ]),
+      }),
+      _vm._v(" "),
+      _c("modal-component", {
+        attrs: { id: "modalMarcaEditar", titulo: "Editar Marca" },
+        scopedSlots: _vm._u([
+          {
+            key: "alertas",
+            fn: function () {
+              return [
+                _vm.statusRequest == "Editado"
+                  ? _c("alert-component", {
+                      attrs: {
+                        tipo: "success",
+                        detalhes: _vm.detalhesRequest,
+                        titulo: "Sucesso ao cadastrar a marca",
+                      },
+                    })
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.statusRequest == "ErroEdit"
+                  ? _c("alert-component", {
+                      attrs: {
+                        tipo: "danger",
+                        detalhes: _vm.detalhesRequest,
+                        titulo: "Falha ao salvar",
+                      },
+                    })
+                  : _vm._e(),
+              ]
+            },
+            proxy: true,
+          },
+          {
+            key: "conteudo",
+            fn: function () {
+              return [
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _c(
+                      "inputcontainer-component",
+                      {
+                        attrs: {
+                          id: "idNomeEdit",
+                          titulo: "Nome",
+                          idHelpe: "idHelpe",
+                          tituloAjuda: "Obrigatorio. Informe o nome ",
+                        },
+                      },
+                      [
+                        _c("input", {
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "text",
+                            id: "idNomeMarcaEdit",
+                            "aria-describedby": "idHelpe",
+                          },
+                          domProps: { value: _vm.$store.state.item.name },
+                        }),
+                      ]
+                    ),
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _c(
+                      "inputcontainer-component",
+                      {
+                        attrs: {
+                          id: "idImagemEditComponent",
+                          titulo: "Imagem",
+                          idHelpe: "idHelpeimagem",
+                          tituloAjuda: "Obrigatorio. Informe a imagem ",
+                        },
+                      },
+                      [
+                        _c("input", {
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "text",
+                            id: "idImagemEdit",
+                            "aria-describedby": "idHelpeimagem",
+                          },
+                          domProps: { value: _vm.$store.state.item.imagem },
+                        }),
+                      ]
+                    ),
+                  ],
+                  1
+                ),
+              ]
+            },
+            proxy: true,
+          },
+          {
+            key: "rodape",
+            fn: function () {
+              return [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: { type: "button", "data-bs-dismiss": "modal" },
+                  },
+                  [_vm._v("Fechar")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function ($event) {
+                        return _vm.Edit()
+                      },
+                    },
+                  },
+                  [_vm._v("Editar")]
+                ),
+              ]
+            },
+            proxy: true,
+          },
+        ]),
+      }),
     ],
     1
   )
@@ -39854,7 +40142,25 @@ var render = function () {
                   : _vm._e(),
               ]),
               _vm._v(" "),
-              _vm._m(0, true),
+              _c("td", [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary btn-sm",
+                    attrs: {
+                      type: "button",
+                      "data-bs-toggle": "modal",
+                      "data-bs-target": "#modalMarcaEditar",
+                    },
+                    on: {
+                      click: function ($event) {
+                        return _vm.setStore(obj)
+                      },
+                    },
+                  },
+                  [_vm._v("Editar")]
+                ),
+              ]),
               _vm._v(" "),
               _c("td", [
                 _c(
@@ -39884,20 +40190,7 @@ var render = function () {
     ]),
   ])
 }
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c(
-        "button",
-        { staticClass: "btn btn-secondary btn-sm", attrs: { type: "button" } },
-        [_vm._v("Editar")]
-      ),
-    ])
-  },
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

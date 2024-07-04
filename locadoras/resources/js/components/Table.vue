@@ -14,7 +14,7 @@
                     <td>
                         <button v-if="visualizacao" type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalMarcaVisualizar" @click="setStore(obj)">Visualizar</button>
                     </td>                    <td>
-                        <button type="button" class="btn btn-secondary btn-sm">Editar</button>
+                        <button type="button" class="btn btn-secondary btn-sm " data-bs-toggle="modal" data-bs-target="#modalMarcaEditar" @click="setStore(obj)">Editar</button>
                     </td>                    <td>
                         <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalMarcaDeletar"  @click="setStore(obj)">Apagar</button>
                     </td>
