@@ -49,7 +49,7 @@
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                     <a class="dropdown-item" href="#">Carro</a>
                                     <a class="dropdown-item" href="#"  onclick="getMarca()">Marca</a>
-                                    <a class="dropdown-item" href="#">Modelo</a>
+                                    <a class="dropdown-item" href="#" onclick="getModelo()">Modelo</a>
                                 </div>
                             </li>
                         @endauth
@@ -110,13 +110,16 @@
 <script>
 
     function getMarca(){
-
         const urlToken = new URLSearchParams(window.location.search);
         let token =urlToken.get('token')
         console.log(token);
-        window.location.href = `/marca?token=${token}`;
-        
-
+        window.location.href = `/marca?token=${token}`;       
+    }
+    function getModelo(){
+        const urlToken = new URLSearchParams(window.location.search);
+        let token =urlToken.get('token')
+        console.log(token);
+        window.location.href = `/modelo?token=${token}`;    
     }
 </script>
 </html>

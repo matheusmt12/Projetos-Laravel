@@ -28,4 +28,7 @@ Route::get('/marca',function(){
     return view('app\marca');
 })->middleware('jwt.auth')->name('marca');
 
+Route::get('modelo', function(){
+    return view('app\modelo');
+})->middleware('jwt.auth')->name('modelo');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware('jwt.auth');

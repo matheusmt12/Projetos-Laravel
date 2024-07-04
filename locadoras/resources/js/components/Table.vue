@@ -14,9 +14,9 @@
                     <td>
                         <button v-if="visualizacao" type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalMarcaVisualizar" @click="setStore(obj)">Visualizar</button>
                     </td>                    <td>
-                        <button type="button" class="btn btn-secondary btn-sm " data-bs-toggle="modal" data-bs-target="#modalMarcaEditar" @click="setStore(obj)">Editar</button>
+                        <button v-if="editar" type="button" class="btn btn-secondary btn-sm " data-bs-toggle="modal" data-bs-target="#modalMarcaEditar" @click="setStore(obj)">Editar</button>
                     </td>                    <td>
-                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalMarcaDeletar"  @click="setStore(obj)">Apagar</button>
+                        <button v-if="apagar" type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalMarcaDeletar"  @click="setStore(obj)">Apagar</button>
                     </td>
                 </tr>
             </tbody>
