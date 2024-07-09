@@ -30,8 +30,8 @@
                    <template v-slot:conteudo>
                         <table-component :dados="modelos.data"
                         :titulos="['id','nome','imagem','lugares']"
-                        :visualizacao="false"
-                        :editar="false"
+                        :visualizacao="true"
+                        :editar="true"
                         :apagar="false">
 
                         </table-component>
@@ -82,7 +82,7 @@
                                 <div class="col mb-3">
                                     <Label class="form-label" for="idMarcaModelo">Marca</Label>
                                     <select class="form-select" id="idMarcaModelo">
-                                        <option v-for="i in marcas.data" :value="i.id">{{ i.name }}</option>
+                                        <option v-for="i in marcas.data" :key="i.id" :value="i.id">{{ i.name }}</option>
                                     </select>
                                 </div>
                                 <div class="col mb-3">
@@ -100,6 +100,120 @@
                 </template>
             </modal-component>
             <!-- Fim Modal Add -->
+            <!-- Inicio modal Edit -->
+             <modal-component id="modalEditar" titulo="Editar Modelo">
+                <template v-slot:conteudo>
+                    <div class="form-group">
+                        <inputcontainer-component id="idNomeModelo" titulo="Nome" idHelp="idHelpeModeloNome" tituloAjuda="Obrigatorio. Informe o Nome do Modelo">
+                            <input type="text" id="nomeModeloEdit" class="form-control" aria-describedby="idHelp" :value="$store.state.item.nome">
+                        </inputcontainer-component>
+                    </div>
+                    <div class="form row">
+                        <div class="col mb-3">
+                            <inputcontainer-component id="imagemModeloAdd" titulo="Imagem" idHelp="imagemHelpModelo" tituloAjuda="Obrigatório. Selecione a Imagem">
+                                <input type="text" id="imagemModeloEdit" class="form-control" aria-describedby="idHelp" :value="$store.state.item.imagem">
+                            </inputcontainer-component>
+                        </div>
+                        <div class="col mb-3">
+                            <inputcontainer-component id="numPortasModelo" titulo="Número de Portas" idHelp="numPortasAjudaModelo" tituloAjuda="Obrigatório. Informe a quantidade de portas">
+                                <input type="number" id="numportasModeloEdit" class="form-control" aria-describedby="idHelp" :value="$store.state.item.numero_portas">
+                            </inputcontainer-component>
+                        </div>
+                        <div class="form row">
+                            <div class="col mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="AbsMOdelo" :value="$store.state.item.abs">
+                                    <label class="form-check-label" for="AbsMOdelo">
+                                        Freio ABS
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" :value="$store.state.item.abs" id="AirBagMOdelo">
+                                    <label class="form-check-label" for="AirBagMOdelo">
+                                        AirBag
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col mb-3">
+                                    <Label class="form-label" for="idMarcaModelo">Marca</Label>
+                                    <select class="form-select" id="idMarcaModelo">
+                                        <option v-for="i in marcas.data" :key="i.id" :value="i.id">{{ i.name }}</option>
+                                    </select>
+                                </div>
+                                <div class="col mb-3">
+                                    <inputcontainer-component id="lugaresModelo" titulo="Lugares" idHelp="lugaresHelp" tituloAjuda="Obrogatorio. Informe o numero de lugares por pessoa">
+                                        <input type="number" id="lugaresmodeloid" class="form-control" aria-describedby="idHelp":value="$store.state.item.lugares">
+                                    </inputcontainer-component>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <template v-slot:rodape>
+                    <button type="button" data-bs-dismiss="modal" class="btn btn-secondary btn-sm">Fechar</button>
+                    <button type="submit" class="btn btn-sm btn-primary" @click="editar($store.state.item.id)">Salvar</button>
+                </template>
+             </modal-component>
+            <!--Fim modal Edit -->
+            <!--Inicio modal visualizar  -->
+                <modal-component id="modalVisualizar" titulo="Visualizar Modelo">
+                    <template v-slot:conteudo>
+                        <div class="form-group">
+                            <inputcontainer-component id="idNomeModelo" titulo="Nome" idHelp="idHelpeModeloNome" tituloAjuda="Obrigatorio. Informe o Nome do Modelo">
+                                <input type="text" id="nomeModeloVisualizar" class="form-control" aria-describedby="idHelp" :value="$store.state.item.nome">
+                            </inputcontainer-component>
+                        </div>
+                        <div class="form row">
+                            <div class="col mb-3">
+                                <inputcontainer-component id="imagemModeloAdd" titulo="Imagem" idHelp="imagemHelpModelo" tituloAjuda="Obrigatório. Selecione a Imagem">
+                                    <input type="text" id="imagemModeloVisualizar" class="form-control" aria-describedby="idHelp" :value="$store.state.item.imagem">
+                                </inputcontainer-component>
+                            </div>
+                            <div class="col mb-3">
+                                <inputcontainer-component id="numPortasModelo" titulo="Número de Portas" idHelp="numPortasAjudaModelo" tituloAjuda="Obrigatório. Informe a quantidade de portas">
+                                    <input type="number" id="numportasModeloVisualizar" class="form-control" aria-describedby="idHelp" :value="$store.state.item.numero_portas">
+                                </inputcontainer-component>
+                            </div>
+                            <div class="form row">
+                                <div class="col mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="AbsMOdeloVisualizar" v-model="abs">
+                                        <label class="form-check-label" for="AbsMOdeloVisualizar">
+                                            Freio ABS
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" v-model="airbag" id="AirBagMOdeloVisualizar">
+                                        <label class="form-check-label" for="AirBagMOdeloVisualizar">
+                                            AirBag
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col mb-3">
+                                        <Label class="form-label" for="idMarcaModeloVisualizar">Marca</Label>
+                                        <input disabled class="form-control" type="text" v-for="i in marcas.data" :key="i.id" v-if="i.id === $store.state.item.id_marca" :value="i.name">
+                                    </div>
+                                    <div class="col mb-3">
+                                        <inputcontainer-component id="lugaresModelo" titulo="Lugares" idHelp="lugaresHelp" tituloAjuda="Obrogatorio. Informe o numero de lugares por pessoa">
+                                            <input type="number" id="lugaresmodeloidVisualizar" class="form-control" aria-describedby="idHelp":value="$store.state.item.lugares">
+                                        </inputcontainer-component>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                       
+                    </template>
+                    <template v-slot:rodape>
+
+                    </template>
+                </modal-component>
+            <!--Fim modal Visualizar -->
+
         </div>
         
     </div>
@@ -129,6 +243,27 @@ import { values } from 'lodash';
            
         },
         methods:{
+            editar(id){
+                let idMarca =  document.getElementById('idMarcaModelo').value;
+                let dados = {
+                    nome : document.getElementById('nomeModeloEdit').value,
+                    imagem : document.getElementById('imagemModeloEdit').value,
+                    numero_portas : document.getElementById('numportasModeloEdit').value,
+                    abs : this.abs,
+                    air_bag : this.airbag,
+                    id_marca : idMarca,
+                    lugares :document.getElementById('lugaresmodeloid').value
+                }
+                axios.put(this.urlBase + '/' +id,dados).then(response => {
+                    console.log('Ok');
+                    this.carregarModelos();
+                }).catch(error => {
+                    console.log('algo aconteceu ');
+                })
+
+                console.log(dados , id);
+
+            },
             carregarMarcas(){
                 let urlMarca = 'http://127.0.0.1:8000/api/v1/marca'; 
 

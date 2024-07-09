@@ -2501,26 +2501,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -2819,6 +2799,120 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2839,15 +2933,35 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    carregarMarcas: function carregarMarcas() {
+    editar: function editar(id) {
       var _this = this;
+      var idMarca = document.getElementById('idMarcaModelo').value;
+      var dados = {
+        nome: document.getElementById('nomeModeloEdit').value,
+        imagem: document.getElementById('imagemModeloEdit').value,
+        numero_portas: document.getElementById('numportasModeloEdit').value,
+        abs: this.abs,
+        air_bag: this.airbag,
+        id_marca: idMarca,
+        lugares: document.getElementById('lugaresmodeloid').value
+      };
+      axios__WEBPACK_IMPORTED_MODULE_0___default().put(this.urlBase + '/' + id, dados).then(function (response) {
+        console.log('Ok');
+        _this.carregarModelos();
+      })["catch"](function (error) {
+        console.log('algo aconteceu ');
+      });
+      console.log(dados, id);
+    },
+    carregarMarcas: function carregarMarcas() {
+      var _this2 = this;
       var urlMarca = 'http://127.0.0.1:8000/api/v1/marca';
       axios__WEBPACK_IMPORTED_MODULE_0___default().get(urlMarca).then(function (response) {
-        _this.marcas = response.data;
+        _this2.marcas = response.data;
       });
     },
     salvar: function salvar() {
-      var _this2 = this;
+      var _this3 = this;
       var idMarca = document.getElementById('idMarcaModelo').value;
       var dados = {
         nome: this.nameModelo,
@@ -2860,15 +2974,15 @@ __webpack_require__.r(__webpack_exports__);
       };
       axios__WEBPACK_IMPORTED_MODULE_0___default().post(this.urlBase, dados).then(function (response) {
         console.log("Ok");
-        _this2.carregarModelos();
+        _this3.carregarModelos();
       })["catch"](function (erro) {
         console.log('Erro');
       });
     },
     carregarModelos: function carregarModelos() {
-      var _this3 = this;
+      var _this4 = this;
       axios__WEBPACK_IMPORTED_MODULE_0___default().get(this.urlBase).then(function (response) {
-        _this3.modelos = response;
+        _this4.modelos = response;
       });
     }
   },
@@ -39845,7 +39959,7 @@ var render = function () {
       }),
       _vm._v(" "),
       _c("modal-component", {
-        attrs: { id: "modalMarcaVisualizar", titulo: "Visualizar Marca" },
+        attrs: { id: "modalVisualizar", titulo: "Visualizar Marca" },
         scopedSlots: _vm._u([
           {
             key: "alertas",
@@ -39901,7 +40015,7 @@ var render = function () {
       }),
       _vm._v(" "),
       _c("modal-component", {
-        attrs: { id: "modalMarcaDeletar", titulo: "Deletar Marca" },
+        attrs: { id: "modalDeletar", titulo: "Deletar Marca" },
         scopedSlots: _vm._u([
           {
             key: "alertas",
@@ -39991,97 +40105,7 @@ var render = function () {
       }),
       _vm._v(" "),
       _c("modal-component", {
-        attrs: { id: "modalMarcaDeletar", titulo: "Deletar Marca" },
-        scopedSlots: _vm._u([
-          {
-            key: "alertas",
-            fn: function () {
-              return [
-                _vm.statusRequest == "Remove"
-                  ? _c("alert-component", {
-                      attrs: {
-                        tipo: "success",
-                        detalhes: _vm.detalhesRequest,
-                        titulo: "Sucesso ao cadastrar a marca",
-                      },
-                    })
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.statusRequest == "ErroRemove"
-                  ? _c("alert-component", {
-                      attrs: {
-                        tipo: "danger",
-                        detalhes: _vm.detalhesRequest,
-                        titulo: "Falha ao salvar",
-                      },
-                    })
-                  : _vm._e(),
-              ]
-            },
-            proxy: true,
-          },
-          {
-            key: "conteudo",
-            fn: function () {
-              return [
-                _c("inputcontainer-component", { attrs: { titulo: "ID" } }, [
-                  _c("input", {
-                    staticClass: "form-control",
-                    attrs: { type: "text", disabled: "" },
-                    domProps: { value: _vm.$store.state.item.id },
-                  }),
-                ]),
-                _vm._v(" "),
-                _c(
-                  "inputcontainer-component",
-                  { attrs: { titulo: "Nome da marca" } },
-                  [
-                    _c("input", {
-                      staticClass: "form-control",
-                      attrs: { type: "text", disabled: "" },
-                      domProps: { value: _vm.$store.state.item.name },
-                    }),
-                  ]
-                ),
-              ]
-            },
-            proxy: true,
-          },
-          {
-            key: "rodape",
-            fn: function () {
-              return [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-secondary",
-                    attrs: { type: "button", "data-bs-dismiss": "modal" },
-                  },
-                  [_vm._v("Fechar")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-danger",
-                    attrs: { type: "button" },
-                    on: {
-                      click: function ($event) {
-                        return _vm.remover(_vm.$store.state.item.id)
-                      },
-                    },
-                  },
-                  [_vm._v("Apagar")]
-                ),
-              ]
-            },
-            proxy: true,
-          },
-        ]),
-      }),
-      _vm._v(" "),
-      _c("modal-component", {
-        attrs: { id: "modalMarcaEditar", titulo: "Editar Marca" },
+        attrs: { id: "modalEditar", titulo: "Editar Marca" },
         scopedSlots: _vm._u([
           {
             key: "alertas",
@@ -40452,8 +40476,8 @@ var render = function () {
                         attrs: {
                           dados: _vm.modelos.data,
                           titulos: ["id", "nome", "imagem", "lugares"],
-                          visualizacao: false,
-                          editar: false,
+                          visualizacao: true,
+                          editar: true,
                           apagar: false,
                         },
                       }),
@@ -40771,7 +40795,7 @@ var render = function () {
                               _vm._l(_vm.marcas.data, function (i) {
                                 return _c(
                                   "option",
-                                  { domProps: { value: i.id } },
+                                  { key: i.id, domProps: { value: i.id } },
                                   [_vm._v(_vm._s(i.name))]
                                 )
                               }),
@@ -40860,6 +40884,558 @@ var render = function () {
                     [_vm._v("Salvar")]
                   ),
                 ]
+              },
+              proxy: true,
+            },
+          ]),
+        }),
+        _vm._v(" "),
+        _c("modal-component", {
+          attrs: { id: "modalEditar", titulo: "Editar Modelo" },
+          scopedSlots: _vm._u([
+            {
+              key: "conteudo",
+              fn: function () {
+                return [
+                  _c(
+                    "div",
+                    { staticClass: "form-group" },
+                    [
+                      _c(
+                        "inputcontainer-component",
+                        {
+                          attrs: {
+                            id: "idNomeModelo",
+                            titulo: "Nome",
+                            idHelp: "idHelpeModeloNome",
+                            tituloAjuda:
+                              "Obrigatorio. Informe o Nome do Modelo",
+                          },
+                        },
+                        [
+                          _c("input", {
+                            staticClass: "form-control",
+                            attrs: {
+                              type: "text",
+                              id: "nomeModeloEdit",
+                              "aria-describedby": "idHelp",
+                            },
+                            domProps: { value: _vm.$store.state.item.nome },
+                          }),
+                        ]
+                      ),
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form row" }, [
+                    _c(
+                      "div",
+                      { staticClass: "col mb-3" },
+                      [
+                        _c(
+                          "inputcontainer-component",
+                          {
+                            attrs: {
+                              id: "imagemModeloAdd",
+                              titulo: "Imagem",
+                              idHelp: "imagemHelpModelo",
+                              tituloAjuda: "Obrigatório. Selecione a Imagem",
+                            },
+                          },
+                          [
+                            _c("input", {
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                id: "imagemModeloEdit",
+                                "aria-describedby": "idHelp",
+                              },
+                              domProps: { value: _vm.$store.state.item.imagem },
+                            }),
+                          ]
+                        ),
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "col mb-3" },
+                      [
+                        _c(
+                          "inputcontainer-component",
+                          {
+                            attrs: {
+                              id: "numPortasModelo",
+                              titulo: "Número de Portas",
+                              idHelp: "numPortasAjudaModelo",
+                              tituloAjuda:
+                                "Obrigatório. Informe a quantidade de portas",
+                            },
+                          },
+                          [
+                            _c("input", {
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "number",
+                                id: "numportasModeloEdit",
+                                "aria-describedby": "idHelp",
+                              },
+                              domProps: {
+                                value: _vm.$store.state.item.numero_portas,
+                              },
+                            }),
+                          ]
+                        ),
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form row" }, [
+                      _c("div", { staticClass: "col mb-3" }, [
+                        _c("div", { staticClass: "form-check" }, [
+                          _c("input", {
+                            staticClass: "form-check-input",
+                            attrs: { type: "checkbox", id: "AbsMOdelo" },
+                            domProps: { value: _vm.$store.state.item.abs },
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "label",
+                            {
+                              staticClass: "form-check-label",
+                              attrs: { for: "AbsMOdelo" },
+                            },
+                            [
+                              _vm._v(
+                                "\n                                    Freio ABS\n                                "
+                              ),
+                            ]
+                          ),
+                        ]),
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col mb-3" }, [
+                        _c("div", { staticClass: "form-check" }, [
+                          _c("input", {
+                            staticClass: "form-check-input",
+                            attrs: { type: "checkbox", id: "AirBagMOdelo" },
+                            domProps: { value: _vm.$store.state.item.abs },
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "label",
+                            {
+                              staticClass: "form-check-label",
+                              attrs: { for: "AirBagMOdelo" },
+                            },
+                            [
+                              _vm._v(
+                                "\n                                    AirBag\n                                "
+                              ),
+                            ]
+                          ),
+                        ]),
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-row" }, [
+                        _c(
+                          "div",
+                          { staticClass: "col mb-3" },
+                          [
+                            _c(
+                              "Label",
+                              {
+                                staticClass: "form-label",
+                                attrs: { for: "idMarcaModelo" },
+                              },
+                              [_vm._v("Marca")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "select",
+                              {
+                                staticClass: "form-select",
+                                attrs: { id: "idMarcaModelo" },
+                              },
+                              _vm._l(_vm.marcas.data, function (i) {
+                                return _c(
+                                  "option",
+                                  { key: i.id, domProps: { value: i.id } },
+                                  [_vm._v(_vm._s(i.name))]
+                                )
+                              }),
+                              0
+                            ),
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "col mb-3" },
+                          [
+                            _c(
+                              "inputcontainer-component",
+                              {
+                                attrs: {
+                                  id: "lugaresModelo",
+                                  titulo: "Lugares",
+                                  idHelp: "lugaresHelp",
+                                  tituloAjuda:
+                                    "Obrogatorio. Informe o numero de lugares por pessoa",
+                                },
+                              },
+                              [
+                                _c("input", {
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    type: "number",
+                                    id: "lugaresmodeloid",
+                                    "aria-describedby": "idHelp",
+                                  },
+                                  domProps: {
+                                    value: _vm.$store.state.item.lugares,
+                                  },
+                                }),
+                              ]
+                            ),
+                          ],
+                          1
+                        ),
+                      ]),
+                    ]),
+                  ]),
+                ]
+              },
+              proxy: true,
+            },
+            {
+              key: "rodape",
+              fn: function () {
+                return [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-secondary btn-sm",
+                      attrs: { type: "button", "data-bs-dismiss": "modal" },
+                    },
+                    [_vm._v("Fechar")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-sm btn-primary",
+                      attrs: { type: "submit" },
+                      on: {
+                        click: function ($event) {
+                          return _vm.editar(_vm.$store.state.item.id)
+                        },
+                      },
+                    },
+                    [_vm._v("Salvar")]
+                  ),
+                ]
+              },
+              proxy: true,
+            },
+          ]),
+        }),
+        _vm._v(" "),
+        _c("modal-component", {
+          attrs: { id: "modalVisualizar", titulo: "Visualizar Modelo" },
+          scopedSlots: _vm._u([
+            {
+              key: "conteudo",
+              fn: function () {
+                return [
+                  _c(
+                    "div",
+                    { staticClass: "form-group" },
+                    [
+                      _c(
+                        "inputcontainer-component",
+                        {
+                          attrs: {
+                            id: "idNomeModelo",
+                            titulo: "Nome",
+                            idHelp: "idHelpeModeloNome",
+                            tituloAjuda:
+                              "Obrigatorio. Informe o Nome do Modelo",
+                          },
+                        },
+                        [
+                          _c("input", {
+                            staticClass: "form-control",
+                            attrs: {
+                              type: "text",
+                              id: "nomeModeloVisualizar",
+                              "aria-describedby": "idHelp",
+                            },
+                            domProps: { value: _vm.$store.state.item.nome },
+                          }),
+                        ]
+                      ),
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form row" }, [
+                    _c(
+                      "div",
+                      { staticClass: "col mb-3" },
+                      [
+                        _c(
+                          "inputcontainer-component",
+                          {
+                            attrs: {
+                              id: "imagemModeloAdd",
+                              titulo: "Imagem",
+                              idHelp: "imagemHelpModelo",
+                              tituloAjuda: "Obrigatório. Selecione a Imagem",
+                            },
+                          },
+                          [
+                            _c("input", {
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                id: "imagemModeloVisualizar",
+                                "aria-describedby": "idHelp",
+                              },
+                              domProps: { value: _vm.$store.state.item.imagem },
+                            }),
+                          ]
+                        ),
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "col mb-3" },
+                      [
+                        _c(
+                          "inputcontainer-component",
+                          {
+                            attrs: {
+                              id: "numPortasModelo",
+                              titulo: "Número de Portas",
+                              idHelp: "numPortasAjudaModelo",
+                              tituloAjuda:
+                                "Obrigatório. Informe a quantidade de portas",
+                            },
+                          },
+                          [
+                            _c("input", {
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "number",
+                                id: "numportasModeloVisualizar",
+                                "aria-describedby": "idHelp",
+                              },
+                              domProps: {
+                                value: _vm.$store.state.item.numero_portas,
+                              },
+                            }),
+                          ]
+                        ),
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form row" }, [
+                      _c("div", { staticClass: "col mb-3" }, [
+                        _c("div", { staticClass: "form-check" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.abs,
+                                expression: "abs",
+                              },
+                            ],
+                            staticClass: "form-check-input",
+                            attrs: {
+                              type: "checkbox",
+                              id: "AbsMOdeloVisualizar",
+                            },
+                            domProps: {
+                              checked: Array.isArray(_vm.abs)
+                                ? _vm._i(_vm.abs, null) > -1
+                                : _vm.abs,
+                            },
+                            on: {
+                              change: function ($event) {
+                                var $$a = _vm.abs,
+                                  $$el = $event.target,
+                                  $$c = $$el.checked ? true : false
+                                if (Array.isArray($$a)) {
+                                  var $$v = null,
+                                    $$i = _vm._i($$a, $$v)
+                                  if ($$el.checked) {
+                                    $$i < 0 && (_vm.abs = $$a.concat([$$v]))
+                                  } else {
+                                    $$i > -1 &&
+                                      (_vm.abs = $$a
+                                        .slice(0, $$i)
+                                        .concat($$a.slice($$i + 1)))
+                                  }
+                                } else {
+                                  _vm.abs = $$c
+                                }
+                              },
+                            },
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "label",
+                            {
+                              staticClass: "form-check-label",
+                              attrs: { for: "AbsMOdeloVisualizar" },
+                            },
+                            [
+                              _vm._v(
+                                "\n                                        Freio ABS\n                                    "
+                              ),
+                            ]
+                          ),
+                        ]),
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col mb-3" }, [
+                        _c("div", { staticClass: "form-check" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.airbag,
+                                expression: "airbag",
+                              },
+                            ],
+                            staticClass: "form-check-input",
+                            attrs: {
+                              type: "checkbox",
+                              id: "AirBagMOdeloVisualizar",
+                            },
+                            domProps: {
+                              checked: Array.isArray(_vm.airbag)
+                                ? _vm._i(_vm.airbag, null) > -1
+                                : _vm.airbag,
+                            },
+                            on: {
+                              change: function ($event) {
+                                var $$a = _vm.airbag,
+                                  $$el = $event.target,
+                                  $$c = $$el.checked ? true : false
+                                if (Array.isArray($$a)) {
+                                  var $$v = null,
+                                    $$i = _vm._i($$a, $$v)
+                                  if ($$el.checked) {
+                                    $$i < 0 && (_vm.airbag = $$a.concat([$$v]))
+                                  } else {
+                                    $$i > -1 &&
+                                      (_vm.airbag = $$a
+                                        .slice(0, $$i)
+                                        .concat($$a.slice($$i + 1)))
+                                  }
+                                } else {
+                                  _vm.airbag = $$c
+                                }
+                              },
+                            },
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "label",
+                            {
+                              staticClass: "form-check-label",
+                              attrs: { for: "AirBagMOdeloVisualizar" },
+                            },
+                            [
+                              _vm._v(
+                                "\n                                        AirBag\n                                    "
+                              ),
+                            ]
+                          ),
+                        ]),
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-row" }, [
+                        _c(
+                          "div",
+                          { staticClass: "col mb-3" },
+                          [
+                            _c(
+                              "Label",
+                              {
+                                staticClass: "form-label",
+                                attrs: { for: "idMarcaModeloVisualizar" },
+                              },
+                              [_vm._v("Marca")]
+                            ),
+                            _vm._v(" "),
+                            _vm._l(_vm.marcas.data, function (i) {
+                              return i.id === _vm.$store.state.item.id_marca
+                                ? _c("input", {
+                                    key: i.id,
+                                    staticClass: "form-control",
+                                    attrs: { disabled: "", type: "text" },
+                                    domProps: { value: i.name },
+                                  })
+                                : _vm._e()
+                            }),
+                          ],
+                          2
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "col mb-3" },
+                          [
+                            _c(
+                              "inputcontainer-component",
+                              {
+                                attrs: {
+                                  id: "lugaresModelo",
+                                  titulo: "Lugares",
+                                  idHelp: "lugaresHelp",
+                                  tituloAjuda:
+                                    "Obrogatorio. Informe o numero de lugares por pessoa",
+                                },
+                              },
+                              [
+                                _c("input", {
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    type: "number",
+                                    id: "lugaresmodeloidVisualizar",
+                                    "aria-describedby": "idHelp",
+                                  },
+                                  domProps: {
+                                    value: _vm.$store.state.item.lugares,
+                                  },
+                                }),
+                              ]
+                            ),
+                          ],
+                          1
+                        ),
+                      ]),
+                    ]),
+                  ]),
+                ]
+              },
+              proxy: true,
+            },
+            {
+              key: "rodape",
+              fn: function () {
+                return undefined
               },
               proxy: true,
             },
@@ -40968,7 +41544,7 @@ var render = function () {
                         attrs: {
                           type: "button",
                           "data-bs-toggle": "modal",
-                          "data-bs-target": "#modalMarcaVisualizar",
+                          "data-bs-target": "#modalVisualizar",
                         },
                         on: {
                           click: function ($event) {
@@ -40990,7 +41566,7 @@ var render = function () {
                         attrs: {
                           type: "button",
                           "data-bs-toggle": "modal",
-                          "data-bs-target": "#modalMarcaEditar",
+                          "data-bs-target": "#modalEditar",
                         },
                         on: {
                           click: function ($event) {
@@ -41012,7 +41588,7 @@ var render = function () {
                         attrs: {
                           type: "button",
                           "data-bs-toggle": "modal",
-                          "data-bs-target": "#modalMarcaDeletar",
+                          "data-bs-target": "#modalDeletar",
                         },
                         on: {
                           click: function ($event) {

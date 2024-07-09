@@ -78,7 +78,7 @@
         </modal-component>
         <!-- Fim modal de incluir marca -->
         <!-- Inicio modal para visualizar -->
-        <modal-component id="modalMarcaVisualizar" titulo="Visualizar Marca">
+        <modal-component id="modalVisualizar" titulo="Visualizar Marca">
             <template v-slot:alertas></template>
             <template v-slot:conteudo>
                 <inputcontainer-component titulo="ID">
@@ -93,27 +93,7 @@
             </template>
         </modal-component>
         <!-- inicio modal de Apagar-->
-        <modal-component id="modalMarcaDeletar" titulo="Deletar Marca">
-            <template v-slot:alertas>
-                <alert-component tipo="success" v-if="statusRequest == 'Remove'" :detalhes="detalhesRequest" titulo="Sucesso ao cadastrar a marca"></alert-component> 
-                <alert-component tipo="danger" v-if="statusRequest == 'ErroRemove'" :detalhes="detalhesRequest" titulo="Falha ao salvar"></alert-component>
-            </template>
-            <template v-slot:conteudo>
-                <inputcontainer-component titulo="ID">
-                    <input type="text" class="form-control" :value="$store.state.item.id" disabled>
-                </inputcontainer-component>
-                <inputcontainer-component titulo="Nome da marca">
-                    <input type="text" class="form-control" :value="$store.state.item.name" disabled>
-                </inputcontainer-component>
-            </template>
-            <template v-slot:rodape>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                <button type="button" class="btn btn-danger" @click="remover($store.state.item.id)">Apagar</button>
-            </template>
-        </modal-component>
-        <!-- Fim modal apagar -->
-        <!-- inicio modal de editar-->
-        <modal-component id="modalMarcaDeletar" titulo="Deletar Marca">
+        <modal-component id="modalDeletar" titulo="Deletar Marca">
             <template v-slot:alertas>
                 <alert-component tipo="success" v-if="statusRequest == 'Remove'" :detalhes="detalhesRequest" titulo="Sucesso ao cadastrar a marca"></alert-component> 
                 <alert-component tipo="danger" v-if="statusRequest == 'ErroRemove'" :detalhes="detalhesRequest" titulo="Falha ao salvar"></alert-component>
@@ -133,7 +113,7 @@
         </modal-component>
         <!-- Fim modal apagar -->
         <!-- Modal de Editar marca -->
-        <modal-component id="modalMarcaEditar" titulo="Editar Marca">
+        <modal-component id="modalEditar" titulo="Editar Marca">
             <template v-slot:alertas>
                 <alert-component tipo="success" v-if="statusRequest == 'Editado'" :detalhes="detalhesRequest" titulo="Sucesso ao cadastrar a marca"></alert-component> 
                 <alert-component tipo="danger" v-if="statusRequest == 'ErroEdit'" :detalhes="detalhesRequest" titulo="Falha ao salvar"></alert-component>

@@ -15,8 +15,8 @@ class AbstractRepository{
     }
 
 
-    public function getAll(){
-        return $this->model->get();
+    public function getAll($modelConsulta){
+        return $this->model->with($modelConsulta)->get();
     }
     
     public function getAllPaginate($numPage){

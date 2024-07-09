@@ -23,7 +23,7 @@ class ModeloController extends Controller
     public function index()
     {
         $repositoryModelo = new RepositoryModelo($this->modelo);
-        $modelos = $repositoryModelo->getAll();
+        $modelos = $repositoryModelo->getAll('marca');
         if ($modelos->count() <= 0) {
             return response()->json(['erro' => 'não há nenhum modelo'], 404);
         }
