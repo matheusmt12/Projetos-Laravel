@@ -30,7 +30,6 @@
         methods :{
             setStore(obj){
                 this.$store.state.item = obj;
-                
             }
         }
     }

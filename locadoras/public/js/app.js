@@ -2913,6 +2913,70 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2929,10 +2993,52 @@ __webpack_require__.r(__webpack_exports__);
       abs: false,
       airbag: false,
       lugares: 0,
-      modelos: []
+      modelos: [],
+      vsAbs: false,
+      vsAir: false,
+      urlPaginate: '',
+      busca: {
+        id: '',
+        nome: ''
+      },
+      filtroUrl: ''
     };
   },
   methods: {
+    pesquisa: function pesquisa() {
+      var filtro = '';
+      for (var chave in this.busca) {
+        if (this.busca[chave]) {
+          if (filtro != '') {
+            filtro += ';';
+          }
+          filtro += chave + ':like:' + this.busca[chave];
+        }
+      }
+      if (filtro != '') {
+        this.urlPaginate = 'page=1';
+        this.filtroUrl = '&filter=' + filtro;
+      } else {
+        this.filtroUrl = '';
+      }
+      console.log(this.filtroUrl);
+      this.carregarModelos();
+    },
+    paginacao: function paginacao(l) {
+      if (l.url) {
+        this.urlPaginate = l.url.split('?')[1];
+        console.log(this.urlPaginate);
+        this.carregarModelos();
+      }
+    },
+    apagar: function apagar(id) {
+      console.log(id);
+      axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"](this.urlBase + '/' + id).then(function (response) {
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
     editar: function editar(id) {
       var _this = this;
       var idMarca = document.getElementById('idMarcaModelo').value;
@@ -2951,7 +3057,6 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log('algo aconteceu ');
       });
-      console.log(dados, id);
     },
     carregarMarcas: function carregarMarcas() {
       var _this2 = this;
@@ -2981,8 +3086,13 @@ __webpack_require__.r(__webpack_exports__);
     },
     carregarModelos: function carregarModelos() {
       var _this4 = this;
-      axios__WEBPACK_IMPORTED_MODULE_0___default().get(this.urlBase).then(function (response) {
-        _this4.modelos = response;
+      var urlUse = this.urlBase + '?' + this.urlPaginate + this.filtroUrl;
+      console.log(urlUse);
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get(urlUse).then(function (response) {
+        _this4.modelos = response.data;
+        console.log(_this4.modelos);
+      })["catch"](function (error) {
+        console.log(error);
       });
     }
   },
@@ -40371,19 +40481,23 @@ var render = function () {
                                     {
                                       name: "model",
                                       rawName: "v-model",
-                                      value: _vm.idPesquisa,
-                                      expression: "idPesquisa",
+                                      value: _vm.busca.id,
+                                      expression: "busca.id",
                                     },
                                   ],
                                   staticClass: "form-control",
                                   attrs: { type: "number" },
-                                  domProps: { value: _vm.idPesquisa },
+                                  domProps: { value: _vm.busca.id },
                                   on: {
                                     input: function ($event) {
                                       if ($event.target.composing) {
                                         return
                                       }
-                                      _vm.idPesquisa = $event.target.value
+                                      _vm.$set(
+                                        _vm.busca,
+                                        "id",
+                                        $event.target.value
+                                      )
                                     },
                                   },
                                 }),
@@ -40413,19 +40527,23 @@ var render = function () {
                                     {
                                       name: "model",
                                       rawName: "v-model",
-                                      value: _vm.nomePesquisa,
-                                      expression: "nomePesquisa",
+                                      value: _vm.busca.nome,
+                                      expression: "busca.nome",
                                     },
                                   ],
                                   staticClass: "form-control",
                                   attrs: { type: "text" },
-                                  domProps: { value: _vm.nomePesquisa },
+                                  domProps: { value: _vm.busca.nome },
                                   on: {
                                     input: function ($event) {
                                       if ($event.target.composing) {
                                         return
                                       }
-                                      _vm.nomePesquisa = $event.target.value
+                                      _vm.$set(
+                                        _vm.busca,
+                                        "nome",
+                                        $event.target.value
+                                      )
                                     },
                                   },
                                 }),
@@ -40448,6 +40566,11 @@ var render = function () {
                         {
                           staticClass: "btn btn-primary btn-sm float-right",
                           attrs: { type: "submit" },
+                          on: {
+                            click: function ($event) {
+                              return _vm.pesquisa()
+                            },
+                          },
                         },
                         [_vm._v("Pesquisar")]
                       ),
@@ -40478,7 +40601,7 @@ var render = function () {
                           titulos: ["id", "nome", "imagem", "lugares"],
                           visualizacao: true,
                           editar: true,
-                          apagar: false,
+                          apagar: true,
                         },
                       }),
                     ]
@@ -40489,6 +40612,33 @@ var render = function () {
                   key: "rodape",
                   fn: function () {
                     return [
+                      _c(
+                        "paginate-component",
+                        _vm._l(_vm.modelos.links, function (i, key) {
+                          return _c(
+                            "li",
+                            {
+                              key: key,
+                              class: i.active
+                                ? "page-item active"
+                                : "page-item",
+                            },
+                            [
+                              _c("a", {
+                                staticClass: "page-link",
+                                domProps: { innerHTML: _vm._s(i.label) },
+                                on: {
+                                  click: function ($event) {
+                                    return _vm.paginacao(i)
+                                  },
+                                },
+                              }),
+                            ]
+                          )
+                        }),
+                        0
+                      ),
+                      _vm._v(" "),
                       _c(
                         "button",
                         {
@@ -40996,9 +41146,42 @@ var render = function () {
                       _c("div", { staticClass: "col mb-3" }, [
                         _c("div", { staticClass: "form-check" }, [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.abs,
+                                expression: "abs",
+                              },
+                            ],
                             staticClass: "form-check-input",
                             attrs: { type: "checkbox", id: "AbsMOdelo" },
-                            domProps: { value: _vm.$store.state.item.abs },
+                            domProps: {
+                              checked: Array.isArray(_vm.abs)
+                                ? _vm._i(_vm.abs, null) > -1
+                                : _vm.abs,
+                            },
+                            on: {
+                              change: function ($event) {
+                                var $$a = _vm.abs,
+                                  $$el = $event.target,
+                                  $$c = $$el.checked ? true : false
+                                if (Array.isArray($$a)) {
+                                  var $$v = null,
+                                    $$i = _vm._i($$a, $$v)
+                                  if ($$el.checked) {
+                                    $$i < 0 && (_vm.abs = $$a.concat([$$v]))
+                                  } else {
+                                    $$i > -1 &&
+                                      (_vm.abs = $$a
+                                        .slice(0, $$i)
+                                        .concat($$a.slice($$i + 1)))
+                                  }
+                                } else {
+                                  _vm.abs = $$c
+                                }
+                              },
+                            },
                           }),
                           _vm._v(" "),
                           _c(
@@ -41019,9 +41202,42 @@ var render = function () {
                       _c("div", { staticClass: "col mb-3" }, [
                         _c("div", { staticClass: "form-check" }, [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.airbag,
+                                expression: "airbag",
+                              },
+                            ],
                             staticClass: "form-check-input",
                             attrs: { type: "checkbox", id: "AirBagMOdelo" },
-                            domProps: { value: _vm.$store.state.item.abs },
+                            domProps: {
+                              checked: Array.isArray(_vm.airbag)
+                                ? _vm._i(_vm.airbag, null) > -1
+                                : _vm.airbag,
+                            },
+                            on: {
+                              change: function ($event) {
+                                var $$a = _vm.airbag,
+                                  $$el = $event.target,
+                                  $$c = $$el.checked ? true : false
+                                if (Array.isArray($$a)) {
+                                  var $$v = null,
+                                    $$i = _vm._i($$a, $$v)
+                                  if ($$el.checked) {
+                                    $$i < 0 && (_vm.airbag = $$a.concat([$$v]))
+                                  } else {
+                                    $$i > -1 &&
+                                      (_vm.airbag = $$a
+                                        .slice(0, $$i)
+                                        .concat($$a.slice($$i + 1)))
+                                  }
+                                } else {
+                                  _vm.airbag = $$c
+                                }
+                              },
+                            },
                           }),
                           _vm._v(" "),
                           _c(
@@ -41249,43 +41465,52 @@ var render = function () {
                     _c("div", { staticClass: "form row" }, [
                       _c("div", { staticClass: "col mb-3" }, [
                         _c("div", { staticClass: "form-check" }, [
+                          (
+                            _vm.$store.state.item.abs
+                              ? (_vm.vsAbs = true)
+                              : (_vm.vsAbs = false)
+                          )
+                            ? _c("span")
+                            : _vm._e(),
+                          _vm._v(" "),
                           _c("input", {
                             directives: [
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.abs,
-                                expression: "abs",
+                                value: _vm.vsAbs,
+                                expression: "vsAbs",
                               },
                             ],
                             staticClass: "form-check-input",
                             attrs: {
                               type: "checkbox",
                               id: "AbsMOdeloVisualizar",
+                              disabled: "",
                             },
                             domProps: {
-                              checked: Array.isArray(_vm.abs)
-                                ? _vm._i(_vm.abs, null) > -1
-                                : _vm.abs,
+                              checked: Array.isArray(_vm.vsAbs)
+                                ? _vm._i(_vm.vsAbs, null) > -1
+                                : _vm.vsAbs,
                             },
                             on: {
                               change: function ($event) {
-                                var $$a = _vm.abs,
+                                var $$a = _vm.vsAbs,
                                   $$el = $event.target,
                                   $$c = $$el.checked ? true : false
                                 if (Array.isArray($$a)) {
                                   var $$v = null,
                                     $$i = _vm._i($$a, $$v)
                                   if ($$el.checked) {
-                                    $$i < 0 && (_vm.abs = $$a.concat([$$v]))
+                                    $$i < 0 && (_vm.vsAbs = $$a.concat([$$v]))
                                   } else {
                                     $$i > -1 &&
-                                      (_vm.abs = $$a
+                                      (_vm.vsAbs = $$a
                                         .slice(0, $$i)
                                         .concat($$a.slice($$i + 1)))
                                   }
                                 } else {
-                                  _vm.abs = $$c
+                                  _vm.vsAbs = $$c
                                 }
                               },
                             },
@@ -41299,7 +41524,7 @@ var render = function () {
                             },
                             [
                               _vm._v(
-                                "\n                                        Freio ABS\n                                    "
+                                "\n                                    Freio ABS\n                                "
                               ),
                             ]
                           ),
@@ -41308,43 +41533,52 @@ var render = function () {
                       _vm._v(" "),
                       _c("div", { staticClass: "col mb-3" }, [
                         _c("div", { staticClass: "form-check" }, [
+                          (
+                            _vm.$store.state.item.air_bag
+                              ? (_vm.vsAir = true)
+                              : (_vm.vsAir = false)
+                          )
+                            ? _c("span")
+                            : _vm._e(),
+                          _vm._v(" "),
                           _c("input", {
                             directives: [
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.airbag,
-                                expression: "airbag",
+                                value: _vm.vsAir,
+                                expression: "vsAir",
                               },
                             ],
                             staticClass: "form-check-input",
                             attrs: {
                               type: "checkbox",
                               id: "AirBagMOdeloVisualizar",
+                              disabled: "",
                             },
                             domProps: {
-                              checked: Array.isArray(_vm.airbag)
-                                ? _vm._i(_vm.airbag, null) > -1
-                                : _vm.airbag,
+                              checked: Array.isArray(_vm.vsAir)
+                                ? _vm._i(_vm.vsAir, null) > -1
+                                : _vm.vsAir,
                             },
                             on: {
                               change: function ($event) {
-                                var $$a = _vm.airbag,
+                                var $$a = _vm.vsAir,
                                   $$el = $event.target,
                                   $$c = $$el.checked ? true : false
                                 if (Array.isArray($$a)) {
                                   var $$v = null,
                                     $$i = _vm._i($$a, $$v)
                                   if ($$el.checked) {
-                                    $$i < 0 && (_vm.airbag = $$a.concat([$$v]))
+                                    $$i < 0 && (_vm.vsAir = $$a.concat([$$v]))
                                   } else {
                                     $$i > -1 &&
-                                      (_vm.airbag = $$a
+                                      (_vm.vsAir = $$a
                                         .slice(0, $$i)
                                         .concat($$a.slice($$i + 1)))
                                   }
                                 } else {
-                                  _vm.airbag = $$c
+                                  _vm.vsAir = $$c
                                 }
                               },
                             },
@@ -41358,7 +41592,7 @@ var render = function () {
                             },
                             [
                               _vm._v(
-                                "\n                                        AirBag\n                                    "
+                                "\n                                    AirBag\n                                "
                               ),
                             ]
                           ),
@@ -41435,7 +41669,355 @@ var render = function () {
             {
               key: "rodape",
               fn: function () {
-                return undefined
+                return [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-sm btn-secondary",
+                      attrs: { type: "submit", "data-bs-dismiss": "modal" },
+                    },
+                    [_vm._v("Fechar")]
+                  ),
+                ]
+              },
+              proxy: true,
+            },
+          ]),
+        }),
+        _vm._v(" "),
+        _c("modal-component", {
+          attrs: { id: "modalDeletar", titulo: "Apagar Modelo" },
+          scopedSlots: _vm._u([
+            {
+              key: "conteudo",
+              fn: function () {
+                return [
+                  _c(
+                    "div",
+                    { staticClass: "form-group" },
+                    [
+                      _c(
+                        "inputcontainer-component",
+                        {
+                          attrs: {
+                            id: "idNomeModelo",
+                            titulo: "Nome",
+                            idHelp: "idHelpeModeloNome",
+                            tituloAjuda:
+                              "Obrigatorio. Informe o Nome do Modelo",
+                          },
+                        },
+                        [
+                          _c("input", {
+                            staticClass: "form-control",
+                            attrs: {
+                              type: "text",
+                              id: "nomeModeloVisualizar",
+                              "aria-describedby": "idHelp",
+                            },
+                            domProps: { value: _vm.$store.state.item.nome },
+                          }),
+                        ]
+                      ),
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form row" }, [
+                    _c(
+                      "div",
+                      { staticClass: "col mb-3" },
+                      [
+                        _c(
+                          "inputcontainer-component",
+                          {
+                            attrs: {
+                              id: "imagemModeloAdd",
+                              titulo: "Imagem",
+                              idHelp: "imagemHelpModelo",
+                              tituloAjuda: "Obrigatório. Selecione a Imagem",
+                            },
+                          },
+                          [
+                            _c("input", {
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                id: "imagemModeloVisualizar",
+                                "aria-describedby": "idHelp",
+                              },
+                              domProps: { value: _vm.$store.state.item.imagem },
+                            }),
+                          ]
+                        ),
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "col mb-3" },
+                      [
+                        _c(
+                          "inputcontainer-component",
+                          {
+                            attrs: {
+                              id: "numPortasModelo",
+                              titulo: "Número de Portas",
+                              idHelp: "numPortasAjudaModelo",
+                              tituloAjuda:
+                                "Obrigatório. Informe a quantidade de portas",
+                            },
+                          },
+                          [
+                            _c("input", {
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "number",
+                                id: "numportasModeloVisualizar",
+                                "aria-describedby": "idHelp",
+                              },
+                              domProps: {
+                                value: _vm.$store.state.item.numero_portas,
+                              },
+                            }),
+                          ]
+                        ),
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form row" }, [
+                      _c("div", { staticClass: "col mb-3" }, [
+                        _c("div", { staticClass: "form-check" }, [
+                          (
+                            _vm.$store.state.item.abs
+                              ? (_vm.vsAbs = true)
+                              : (_vm.vsAbs = false)
+                          )
+                            ? _c("span")
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.vsAbs,
+                                expression: "vsAbs",
+                              },
+                            ],
+                            staticClass: "form-check-input",
+                            attrs: {
+                              type: "checkbox",
+                              id: "AbsMOdeloVisualizar",
+                              disabled: "",
+                            },
+                            domProps: {
+                              checked: Array.isArray(_vm.vsAbs)
+                                ? _vm._i(_vm.vsAbs, null) > -1
+                                : _vm.vsAbs,
+                            },
+                            on: {
+                              change: function ($event) {
+                                var $$a = _vm.vsAbs,
+                                  $$el = $event.target,
+                                  $$c = $$el.checked ? true : false
+                                if (Array.isArray($$a)) {
+                                  var $$v = null,
+                                    $$i = _vm._i($$a, $$v)
+                                  if ($$el.checked) {
+                                    $$i < 0 && (_vm.vsAbs = $$a.concat([$$v]))
+                                  } else {
+                                    $$i > -1 &&
+                                      (_vm.vsAbs = $$a
+                                        .slice(0, $$i)
+                                        .concat($$a.slice($$i + 1)))
+                                  }
+                                } else {
+                                  _vm.vsAbs = $$c
+                                }
+                              },
+                            },
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "label",
+                            {
+                              staticClass: "form-check-label",
+                              attrs: { for: "AbsMOdeloVisualizar" },
+                            },
+                            [
+                              _vm._v(
+                                "\n                                    Freio ABS\n                                "
+                              ),
+                            ]
+                          ),
+                        ]),
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col mb-3" }, [
+                        _c("div", { staticClass: "form-check" }, [
+                          (
+                            _vm.$store.state.item.air_bag
+                              ? (_vm.vsAir = true)
+                              : (_vm.vsAir = false)
+                          )
+                            ? _c("span")
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.vsAir,
+                                expression: "vsAir",
+                              },
+                            ],
+                            staticClass: "form-check-input",
+                            attrs: {
+                              type: "checkbox",
+                              id: "AirBagMOdeloVisualizar",
+                              disabled: "",
+                            },
+                            domProps: {
+                              checked: Array.isArray(_vm.vsAir)
+                                ? _vm._i(_vm.vsAir, null) > -1
+                                : _vm.vsAir,
+                            },
+                            on: {
+                              change: function ($event) {
+                                var $$a = _vm.vsAir,
+                                  $$el = $event.target,
+                                  $$c = $$el.checked ? true : false
+                                if (Array.isArray($$a)) {
+                                  var $$v = null,
+                                    $$i = _vm._i($$a, $$v)
+                                  if ($$el.checked) {
+                                    $$i < 0 && (_vm.vsAir = $$a.concat([$$v]))
+                                  } else {
+                                    $$i > -1 &&
+                                      (_vm.vsAir = $$a
+                                        .slice(0, $$i)
+                                        .concat($$a.slice($$i + 1)))
+                                  }
+                                } else {
+                                  _vm.vsAir = $$c
+                                }
+                              },
+                            },
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "label",
+                            {
+                              staticClass: "form-check-label",
+                              attrs: { for: "AirBagMOdeloVisualizar" },
+                            },
+                            [
+                              _vm._v(
+                                "\n                                    AirBag\n                                "
+                              ),
+                            ]
+                          ),
+                        ]),
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-row" }, [
+                        _c(
+                          "div",
+                          { staticClass: "col mb-3" },
+                          [
+                            _c(
+                              "Label",
+                              {
+                                staticClass: "form-label",
+                                attrs: { for: "idMarcaModeloVisualizar" },
+                              },
+                              [_vm._v("Marca")]
+                            ),
+                            _vm._v(" "),
+                            _vm._l(_vm.marcas.data, function (i) {
+                              return i.id === _vm.$store.state.item.id_marca
+                                ? _c("input", {
+                                    key: i.id,
+                                    staticClass: "form-control",
+                                    attrs: { disabled: "", type: "text" },
+                                    domProps: { value: i.name },
+                                  })
+                                : _vm._e()
+                            }),
+                          ],
+                          2
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "col mb-3" },
+                          [
+                            _c(
+                              "inputcontainer-component",
+                              {
+                                attrs: {
+                                  id: "lugaresModelo",
+                                  titulo: "Lugares",
+                                  idHelp: "lugaresHelp",
+                                  tituloAjuda:
+                                    "Obrogatorio. Informe o numero de lugares por pessoa",
+                                },
+                              },
+                              [
+                                _c("input", {
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    type: "number",
+                                    id: "lugaresmodeloidVisualizar",
+                                    "aria-describedby": "idHelp",
+                                  },
+                                  domProps: {
+                                    value: _vm.$store.state.item.lugares,
+                                  },
+                                }),
+                              ]
+                            ),
+                          ],
+                          1
+                        ),
+                      ]),
+                    ]),
+                  ]),
+                ]
+              },
+              proxy: true,
+            },
+            {
+              key: "rodape",
+              fn: function () {
+                return [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-secondary btn-sm",
+                      attrs: { type: "button", "data-bs-dismiss": "modal" },
+                    },
+                    [_vm._v("Fechar")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger btn-sm",
+                      attrs: { type: "submit" },
+                      on: {
+                        click: function ($event) {
+                          return _vm.apagar(_vm.$store.state.item.id)
+                        },
+                      },
+                    },
+                    [_vm._v("Apagar")]
+                  ),
+                ]
               },
               proxy: true,
             },

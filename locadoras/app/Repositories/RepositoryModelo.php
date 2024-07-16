@@ -27,4 +27,9 @@ class RepositoryModelo extends AbstractRepository
         return $this->model->delete();
 
     }
+
+    public function getAllPAginateModelo($numPage, $marca){
+
+        return $this->model->with($marca)->paginate($numPage);
+    }
 }

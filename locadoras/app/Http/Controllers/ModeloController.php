@@ -20,15 +20,18 @@ class ModeloController extends Controller
     {
         $this->modelo = $modelo;
     }
-    public function index()
+    public function index(Request $request)
     {
         $repositoryModelo = new RepositoryModelo($this->modelo);
         $modelos = $repositoryModelo->getAll('marca');
         if ($modelos->count() <= 0) {
             return response()->json(['erro' => 'não há nenhum modelo'], 404);
         }
+        if ($request->has('filter')) {
+            $repositoryModelo->filtro($request->filter);
+        }
 
-        return response()->json($modelos, 200);
+        return response()->json($repositoryModelo->getAllPAginateModelo(3,'marca'), 200);
     }
 
     /**

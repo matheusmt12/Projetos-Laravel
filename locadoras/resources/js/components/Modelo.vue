@@ -8,18 +8,18 @@
                         <div class="form row">
                             <div class="col mb-3">
                                 <inputcontainer-component id="idModeloPesquisa" titulo="ID" idHelp="idHelpModelo" tituloAjuda="Opcional. Informe o id">
-                                    <input type="number" class="form-control" v-model="idPesquisa">
+                                    <input type="number" class="form-control" v-model="busca.id">
                                 </inputcontainer-component>
                             </div>
                             <div class="col mb-3">
                                 <inputcontainer-component id="idNomeModeloPesquisa" titulo="Nome" idHelp="idHelpNomeModelo" tituloAjuda="Opicional. informe o nome">
-                                    <input type="text" class="form-control" v-model="nomePesquisa">
+                                    <input type="text" class="form-control" v-model="busca.nome">
                                 </inputcontainer-component>
                             </div>
                         </div>
                     </template>
                     <template v-slot:rodape>
-                        <button type="submit" class="btn btn-primary btn-sm float-right">Pesquisar</button>
+                        <button type="submit" class="btn btn-primary btn-sm float-right" @click="pesquisa()">Pesquisar</button>
                     </template>
                 </card-component>
             </div>
@@ -32,11 +32,14 @@
                         :titulos="['id','nome','imagem','lugares']"
                         :visualizacao="true"
                         :editar="true"
-                        :apagar="false">
+                        :apagar="true">
 
                         </table-component>
                     </template>
                     <template v-slot:rodape>
+                        <paginate-component>
+                            <li v-for="i,key in modelos.links" :key="key" :class="i.active ? 'page-item active' :'page-item'"><a class="page-link" v-html="i.label" @click="paginacao(i)"></a></li>
+                        </paginate-component>
                         <button type="submit" class="btn float-right btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalAdd">Adicionar</button>
                     </template>
                 </card-component>
@@ -122,7 +125,7 @@
                         <div class="form row">
                             <div class="col mb-3">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="AbsMOdelo" :value="$store.state.item.abs">
+                                    <input class="form-check-input" type="checkbox" id="AbsMOdelo" v-model="abs">
                                     <label class="form-check-label" for="AbsMOdelo">
                                         Freio ABS
                                     </label>
@@ -130,7 +133,7 @@
                             </div>
                             <div class="col mb-3">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" :value="$store.state.item.abs" id="AirBagMOdelo">
+                                    <input class="form-check-input" type="checkbox" v-model="airbag" id="AirBagMOdelo">
                                     <label class="form-check-label" for="AirBagMOdelo">
                                         AirBag
                                     </label>
@@ -159,60 +162,121 @@
              </modal-component>
             <!--Fim modal Edit -->
             <!--Inicio modal visualizar  -->
-                <modal-component id="modalVisualizar" titulo="Visualizar Modelo">
-                    <template v-slot:conteudo>
-                        <div class="form-group">
-                            <inputcontainer-component id="idNomeModelo" titulo="Nome" idHelp="idHelpeModeloNome" tituloAjuda="Obrigatorio. Informe o Nome do Modelo">
-                                <input type="text" id="nomeModeloVisualizar" class="form-control" aria-describedby="idHelp" :value="$store.state.item.nome">
+            <modal-component id="modalVisualizar" titulo="Visualizar Modelo">
+                <template v-slot:conteudo>
+                    <div class="form-group">
+                        <inputcontainer-component id="idNomeModelo" titulo="Nome" idHelp="idHelpeModeloNome" tituloAjuda="Obrigatorio. Informe o Nome do Modelo">
+                            <input type="text" id="nomeModeloVisualizar" class="form-control" aria-describedby="idHelp" :value="$store.state.item.nome">
+                        </inputcontainer-component>
+                    </div>
+                    <div class="form row">
+                        <div class="col mb-3">
+                            <inputcontainer-component id="imagemModeloAdd" titulo="Imagem" idHelp="imagemHelpModelo" tituloAjuda="Obrigatório. Selecione a Imagem">
+                                <input type="text" id="imagemModeloVisualizar" class="form-control" aria-describedby="idHelp" :value="$store.state.item.imagem">
+                            </inputcontainer-component>
+                        </div>
+                        <div class="col mb-3">
+                            <inputcontainer-component id="numPortasModelo" titulo="Número de Portas" idHelp="numPortasAjudaModelo" tituloAjuda="Obrigatório. Informe a quantidade de portas">
+                                <input type="number" id="numportasModeloVisualizar" class="form-control" aria-describedby="idHelp" :value="$store.state.item.numero_portas">
                             </inputcontainer-component>
                         </div>
                         <div class="form row">
                             <div class="col mb-3">
-                                <inputcontainer-component id="imagemModeloAdd" titulo="Imagem" idHelp="imagemHelpModelo" tituloAjuda="Obrigatório. Selecione a Imagem">
-                                    <input type="text" id="imagemModeloVisualizar" class="form-control" aria-describedby="idHelp" :value="$store.state.item.imagem">
-                                </inputcontainer-component>
+                                <div class="form-check">
+                                    <span v-if="$store.state.item.abs ? vsAbs = true : vsAbs=false"></span>
+                                    <input class="form-check-input" type="checkbox" id="AbsMOdeloVisualizar" v-model="vsAbs" disabled>
+                                    <label class="form-check-label" for="AbsMOdeloVisualizar">
+                                        Freio ABS
+                                    </label>
+                                </div>
                             </div>
                             <div class="col mb-3">
-                                <inputcontainer-component id="numPortasModelo" titulo="Número de Portas" idHelp="numPortasAjudaModelo" tituloAjuda="Obrigatório. Informe a quantidade de portas">
-                                    <input type="number" id="numportasModeloVisualizar" class="form-control" aria-describedby="idHelp" :value="$store.state.item.numero_portas">
-                                </inputcontainer-component>
-                            </div>
-                            <div class="form row">
-                                <div class="col mb-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="AbsMOdeloVisualizar" v-model="abs">
-                                        <label class="form-check-label" for="AbsMOdeloVisualizar">
-                                            Freio ABS
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col mb-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" v-model="airbag" id="AirBagMOdeloVisualizar">
-                                        <label class="form-check-label" for="AirBagMOdeloVisualizar">
-                                            AirBag
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="col mb-3">
-                                        <Label class="form-label" for="idMarcaModeloVisualizar">Marca</Label>
-                                        <input disabled class="form-control" type="text" v-for="i in marcas.data" :key="i.id" v-if="i.id === $store.state.item.id_marca" :value="i.name">
-                                    </div>
-                                    <div class="col mb-3">
-                                        <inputcontainer-component id="lugaresModelo" titulo="Lugares" idHelp="lugaresHelp" tituloAjuda="Obrogatorio. Informe o numero de lugares por pessoa">
-                                            <input type="number" id="lugaresmodeloidVisualizar" class="form-control" aria-describedby="idHelp":value="$store.state.item.lugares">
-                                        </inputcontainer-component>
-                                    </div>
+                                <div class="form-check">
+                                    <span v-if="$store.state.item.air_bag ? vsAir = true : vsAir = false"></span>
+                                    <input class="form-check-input" type="checkbox" v-model="vsAir" id="AirBagMOdeloVisualizar" disabled>
+                                    <label class="form-check-label" for="AirBagMOdeloVisualizar">
+                                        AirBag
+                                    </label>
                                 </div>
                             </div>
-                        </div>                       
-                    </template>
-                    <template v-slot:rodape>
-
-                    </template>
-                </modal-component>
+                            <div class="form-row">
+                                <div class="col mb-3">
+                                    <Label class="form-label" for="idMarcaModeloVisualizar">Marca</Label>
+                                    <input disabled class="form-control" type="text" v-for="i in marcas.data" :key="i.id" v-if="i.id === $store.state.item.id_marca" :value="i.name">
+                                </div>
+                                <div class="col mb-3">
+                                    <inputcontainer-component id="lugaresModelo" titulo="Lugares" idHelp="lugaresHelp" tituloAjuda="Obrogatorio. Informe o numero de lugares por pessoa">
+                                        <input type="number" id="lugaresmodeloidVisualizar" class="form-control" aria-describedby="idHelp":value="$store.state.item.lugares">
+                                    </inputcontainer-component>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                       
+                </template>
+                <template v-slot:rodape>
+                    
+                    <button type="submit" data-bs-dismiss="modal" class="btn btn-sm btn-secondary" >Fechar</button>
+                </template>
+            </modal-component>
             <!--Fim modal Visualizar -->
+            <!-- Inicio modal Apagar -->
+            <modal-component id="modalDeletar" titulo="Apagar Modelo">
+                <template v-slot:conteudo>
+                    <div class="form-group">
+                        <inputcontainer-component id="idNomeModelo" titulo="Nome" idHelp="idHelpeModeloNome" tituloAjuda="Obrigatorio. Informe o Nome do Modelo">
+                            <input type="text" id="nomeModeloVisualizar" class="form-control" aria-describedby="idHelp" :value="$store.state.item.nome">
+                        </inputcontainer-component>
+                    </div>
+                    <div class="form row">
+                        <div class="col mb-3">
+                            <inputcontainer-component id="imagemModeloAdd" titulo="Imagem" idHelp="imagemHelpModelo" tituloAjuda="Obrigatório. Selecione a Imagem">
+                                <input type="text" id="imagemModeloVisualizar" class="form-control" aria-describedby="idHelp" :value="$store.state.item.imagem">
+                            </inputcontainer-component>
+                        </div>
+                        <div class="col mb-3">
+                            <inputcontainer-component id="numPortasModelo" titulo="Número de Portas" idHelp="numPortasAjudaModelo" tituloAjuda="Obrigatório. Informe a quantidade de portas">
+                                <input type="number" id="numportasModeloVisualizar" class="form-control" aria-describedby="idHelp" :value="$store.state.item.numero_portas">
+                            </inputcontainer-component>
+                        </div>
+                        <div class="form row">
+                            <div class="col mb-3">
+                                <div class="form-check">
+                                    <span v-if="$store.state.item.abs ? vsAbs = true : vsAbs=false"></span>
+                                    <input class="form-check-input" type="checkbox" id="AbsMOdeloVisualizar" v-model="vsAbs" disabled>
+                                    <label class="form-check-label" for="AbsMOdeloVisualizar">
+                                        Freio ABS
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col mb-3">
+                                <div class="form-check">
+                                    <span v-if="$store.state.item.air_bag ? vsAir = true : vsAir = false"></span>
+                                    <input class="form-check-input" type="checkbox" v-model="vsAir" id="AirBagMOdeloVisualizar" disabled>
+                                    <label class="form-check-label" for="AirBagMOdeloVisualizar">
+                                        AirBag
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col mb-3">
+                                    <Label class="form-label" for="idMarcaModeloVisualizar">Marca</Label>
+                                    <input disabled class="form-control" type="text" v-for="i in marcas.data" :key="i.id" v-if="i.id === $store.state.item.id_marca" :value="i.name">
+                                </div>
+                                <div class="col mb-3">
+                                    <inputcontainer-component id="lugaresModelo" titulo="Lugares" idHelp="lugaresHelp" tituloAjuda="Obrogatorio. Informe o numero de lugares por pessoa">
+                                        <input type="number" id="lugaresmodeloidVisualizar" class="form-control" aria-describedby="idHelp":value="$store.state.item.lugares">
+                                    </inputcontainer-component>
+                                </div>
+                            </div>
+                        </div>
+                    </div>      
+                </template>
+                <template v-slot:rodape>
+                    <button type="button" data-bs-dismiss="modal" class="btn btn-secondary btn-sm">Fechar</button>
+                    <button type="submit" class="btn btn-danger btn-sm" @click="apagar($store.state.item.id)">Apagar</button>
+                </template>
+            </modal-component>
+            <!-- Fim modal apagar -->
 
         </div>
         
@@ -237,12 +301,58 @@ import { values } from 'lodash';
                 abs: false,
                 airbag: false,
                 lugares : 0,
-                modelos :[]
+                modelos :[],
+                vsAbs: false,
+                vsAir: false,
+                urlPaginate: '',
+                busca: {
+                    id: '',
+                    nome: ''
+                },
+                filtroUrl: ''
                 
             };
            
         },
         methods:{
+            pesquisa(){
+                let filtro = ''
+
+
+                for(let chave in this.busca){
+                    if(this.busca[chave]){
+                        if (filtro != '') {
+                            filtro +=';'
+                        }
+                        filtro += chave +':like:'+this.busca[chave];
+                    }
+                }
+                if (filtro != '') {
+                    this.urlPaginate= 'page=1';
+                    this.filtroUrl = '&filter='+ filtro
+                }else{
+                    this.filtroUrl='';
+                }
+                console.log(this.filtroUrl);
+                this.carregarModelos();
+            }
+            ,
+            paginacao(l){
+                if (l.url) {
+                    
+                    this.urlPaginate = l.url.split('?')[1];
+                    console.log(this.urlPaginate);
+                    this.carregarModelos();
+                }
+            },
+            apagar(id){
+                console.log(id);
+                axios.delete(this.urlBase + '/'+id).then(response => {
+                    console.log(response);
+                }).catch(error =>{
+                    console.log(error);
+                })
+            },
             editar(id){
                 let idMarca =  document.getElementById('idMarcaModelo').value;
                 let dados = {
@@ -261,7 +371,6 @@ import { values } from 'lodash';
                     console.log('algo aconteceu ');
                 })
 
-                console.log(dados , id);
 
             },
             carregarMarcas(){
@@ -294,9 +403,14 @@ import { values } from 'lodash';
             },
             carregarModelos(){
 
-                axios.get(this.urlBase)
+                let urlUse = this.urlBase + '?' + this.urlPaginate + this.filtroUrl
+                console.log(urlUse);
+                axios.get(urlUse)
                     .then(response => {
-                        this.modelos=response;
+                        this.modelos=response.data;
+                        console.log(this.modelos);
+                    }).catch(error =>{
+                        console.log(error);
                     })
             }
         },
