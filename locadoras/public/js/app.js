@@ -2234,6 +2234,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -2306,6 +2308,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['csrf_token'],
   data: function data() {
@@ -2318,21 +2321,19 @@ __webpack_require__.r(__webpack_exports__);
     login: function login() {
       var url = 'http://127.0.0.1:8000/api/login';
       var config = {
-        method: 'post',
-        body: new URLSearchParams({
-          'email': this.email,
-          'password': this.password
-        }),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       };
-      fetch(url, config).then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        if (data.token) {
-          document.cookie = 'token=' + data.token + ';SameSite=lax';
-          window.location.href = "/home?token=".concat(data.token);
+      var dados = {
+        'email': this.email,
+        'password': this.password
+      };
+      console.log(dados);
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, dados).then(function (response) {
+        if (response.data.token) {
+          document.cookie = 'token=' + response.data.token + ';SameSite=lax';
+          window.location.href = "/home?token=".concat(response.data.token);
         }
       });
     }
@@ -2977,6 +2978,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3001,10 +3010,15 @@ __webpack_require__.r(__webpack_exports__);
         id: '',
         nome: ''
       },
-      filtroUrl: ''
+      filtroUrl: '',
+      statusRequest: '',
+      detailsRequest: {}
     };
   },
   methods: {
+    limparKanela: function limparKanela() {
+      this.statusRequest = '';
+    },
     pesquisa: function pesquisa() {
       var filtro = '';
       for (var chave in this.busca) {
@@ -3052,10 +3066,17 @@ __webpack_require__.r(__webpack_exports__);
         lugares: document.getElementById('lugaresmodeloid').value
       };
       axios__WEBPACK_IMPORTED_MODULE_0___default().put(this.urlBase + '/' + id, dados).then(function (response) {
-        console.log('Ok');
+        _this.statusRequest = 'Editado';
+        _this.detailsRequest = {
+          mensagem: 'Sucesso: Modelo atualizado'
+        };
         _this.carregarModelos();
       })["catch"](function (error) {
-        console.log('algo aconteceu ');
+        _this.statusRequest = 'EditatoErro';
+        _this.detailsRequest = {
+          mensagem: error.response.data.message,
+          dados: error.response.data.errors
+        };
       });
     },
     carregarMarcas: function carregarMarcas() {
@@ -3078,10 +3099,17 @@ __webpack_require__.r(__webpack_exports__);
         lugares: this.lugares
       };
       axios__WEBPACK_IMPORTED_MODULE_0___default().post(this.urlBase, dados).then(function (response) {
-        console.log("Ok");
+        _this3.statusRequest = 'Modelo Adicionado';
+        _this3.detailsRequest = {
+          mensagem: 'Novo modelo adiconado com sucesso'
+        };
         _this3.carregarModelos();
       })["catch"](function (erro) {
-        console.log('Erro');
+        _this3.statusRequest = 'Erro ao salvar Modelo';
+        _this3.detailsRequest = {
+          mensagem: erro.response.data.message,
+          dados: erro.response.data.errors
+        };
       });
     },
     carregarModelos: function carregarModelos() {
@@ -3243,6 +3271,10 @@ var app = new Vue({
   \***********************************/
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
+var _require = __webpack_require__(/*! axios */ "./node_modules/axios/index.js"),
+  axios = _require["default"];
+var _require2 = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"),
+  error = _require2.error;
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 
 /**
@@ -3282,6 +3314,24 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+axios.interceptors.request.use(function (config) {
+  config.headers.Accept = 'application/json';
+  var token = document.cookie.split(';').find(function (indice) {
+    return indice.includes('token=');
+  });
+  token = token.split('=')[1];
+  token = 'Bearer ' + token;
+  config.headers.Authorization = token;
+  return config;
+}, function (error) {
+  return Promise.reject(error);
+});
+axios.interceptors.response.use(function (response) {
+  return response;
+}, function (error) {
+  return Promise.reject(error);
+});
 
 /***/ }),
 
@@ -40665,6 +40715,33 @@ var render = function () {
           attrs: { id: "modalAdd", titulo: "Adicionar Modelo" },
           scopedSlots: _vm._u([
             {
+              key: "alertas",
+              fn: function () {
+                return [
+                  _vm.statusRequest == "Modelo Adicionado"
+                    ? _c("alert-component", {
+                        attrs: {
+                          titulo: "Novo modelo cadastrado",
+                          detalhes: _vm.detailsRequest,
+                          tipo: "success",
+                        },
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.statusRequest == "Erro ao salvar Modelo"
+                    ? _c("alert-component", {
+                        attrs: {
+                          titulo: "Error ao cadastrar novo modelo",
+                          detalhes: _vm.detailsRequest,
+                          tipo: "danger",
+                        },
+                      })
+                    : _vm._e(),
+                ]
+              },
+              proxy: true,
+            },
+            {
               key: "conteudo",
               fn: function () {
                 return [
@@ -41044,6 +41121,33 @@ var render = function () {
           attrs: { id: "modalEditar", titulo: "Editar Modelo" },
           scopedSlots: _vm._u([
             {
+              key: "alertas",
+              fn: function () {
+                return [
+                  _vm.statusRequest == "Editado"
+                    ? _c("alert-component", {
+                        attrs: {
+                          tipo: "success",
+                          detalhes: _vm.detailsRequest,
+                          titulo: "Modelo Editado com sucesso",
+                        },
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.statusRequest == "EditadoErro"
+                    ? _c("alert-component", {
+                        attrs: {
+                          tipo: "danger",
+                          detalhes: _vm.detailsRequest,
+                          titulo: "Erro ao Editar o modelo",
+                        },
+                      })
+                    : _vm._e(),
+                ]
+              },
+              proxy: true,
+            },
+            {
               key: "conteudo",
               fn: function () {
                 return [
@@ -41336,6 +41440,11 @@ var render = function () {
                     {
                       staticClass: "btn btn-secondary btn-sm",
                       attrs: { type: "button", "data-bs-dismiss": "modal" },
+                      on: {
+                        click: function ($event) {
+                          return _vm.limparKanela()
+                        },
+                      },
                     },
                     [_vm._v("Fechar")]
                   ),

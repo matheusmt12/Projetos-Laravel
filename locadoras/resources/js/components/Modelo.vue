@@ -47,6 +47,10 @@
             </div>
             <!-- Inicio modal Add -->
             <modal-component id="modalAdd" titulo="Adicionar Modelo">
+                <template v-slot:alertas>
+                    <alert-component titulo="Novo modelo cadastrado" v-if="statusRequest == 'Modelo Adicionado'" :detalhes="detailsRequest" tipo="success"></alert-component>
+                    <alert-component titulo="Error ao cadastrar novo modelo" v-if="statusRequest == 'Erro ao salvar Modelo'" :detalhes="detailsRequest" tipo="danger"></alert-component>
+                </template>
                 <template v-slot:conteudo>
                     <div class="form-group">
                         <inputcontainer-component id="idNomeModelo" titulo="Nome" idHelp="idHelpeModeloNome" tituloAjuda="Obrigatorio. Informe o Nome do Modelo">
@@ -105,6 +109,10 @@
             <!-- Fim Modal Add -->
             <!-- Inicio modal Edit -->
              <modal-component id="modalEditar" titulo="Editar Modelo">
+                <template v-slot:alertas>
+                    <alert-component tipo="success" v-if="statusRequest == 'Editado'" :detalhes="detailsRequest" titulo="Modelo Editado com sucesso"></alert-component>
+                    <alert-component tipo="danger" v-if="statusRequest == 'EditadoErro'" :detalhes="detailsRequest" titulo="Erro ao Editar o modelo"></alert-component>
+                </template>
                 <template v-slot:conteudo>
                     <div class="form-group">
                         <inputcontainer-component id="idNomeModelo" titulo="Nome" idHelp="idHelpeModeloNome" tituloAjuda="Obrigatorio. Informe o Nome do Modelo">
@@ -156,7 +164,7 @@
                     </div>
                 </template>
                 <template v-slot:rodape>
-                    <button type="button" data-bs-dismiss="modal" class="btn btn-secondary btn-sm">Fechar</button>
+                    <button type="button" data-bs-dismiss="modal" class="btn btn-secondary btn-sm" @click="limparKanela()">Fechar</button>
                     <button type="submit" class="btn btn-sm btn-primary" @click="editar($store.state.item.id)">Salvar</button>
                 </template>
              </modal-component>
@@ -309,12 +317,17 @@ import { values } from 'lodash';
                     id: '',
                     nome: ''
                 },
-                filtroUrl: ''
+                filtroUrl: '',
+                statusRequest: '',
+                detailsRequest:{}
                 
             };
            
         },
         methods:{
+            limparKanela(){
+                this.statusRequest = '';
+            },
             pesquisa(){
                 let filtro = ''
 
@@ -365,10 +378,18 @@ import { values } from 'lodash';
                     lugares :document.getElementById('lugaresmodeloid').value
                 }
                 axios.put(this.urlBase + '/' +id,dados).then(response => {
-                    console.log('Ok');
+                    this.statusRequest = 'Editado';
+                    this.detailsRequest = {
+                        mensagem: 'Sucesso: Modelo atualizado'
+                    };
                     this.carregarModelos();
+                    
                 }).catch(error => {
-                    console.log('algo aconteceu ');
+                    this.statusRequest = 'EditatoErro';
+                    this.detailsRequest = {
+                        mensagem: error.response.data.message,
+                        dados: error.response.data.errors
+                    }
                 })
 
 
@@ -395,10 +416,17 @@ import { values } from 'lodash';
 
                 axios.post(this.urlBase, dados)
                     .then(response => {
-                        console.log("Ok");
-                        this.carregarModelos()
+                        this.statusRequest = 'Modelo Adicionado';
+                        this.detailsRequest = {
+                            mensagem: 'Novo modelo adiconado com sucesso'
+                        };
+                        this.carregarModelos();
                     }).catch(erro => {
-                        console.log('Erro');
+                        this.statusRequest = 'Erro ao salvar Modelo';
+                        this.detailsRequest = {
+                            mensagem: erro.response.data.message,
+                            dados: erro.response.data.errors
+                        }
                     })   
             },
             carregarModelos(){

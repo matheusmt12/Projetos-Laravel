@@ -70,6 +70,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
     export default{
         props: ['csrf_token'],
         data(){
@@ -83,25 +85,23 @@
                 
                 let url = 'http://127.0.0.1:8000/api/login';
                 let config = {
-                    method: 'post',
-                    body: new URLSearchParams({
-                        'email': this.email,
-                        'password' : this.password,
-                    }),
                     headers:{
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
 
                 }
-                
-                fetch(url,config).then(
-                    response => response.json()).then( data=> {
-                        if(data.token){
-
-                            document.cookie = 'token='+data.token+';SameSite=lax';
-                            window.location.href = `/home?token=${data.token}`;
+                let dados = {
+                    'email': this.email,
+                    'password' : this.password,
+                }
+                console.log(dados);
+                axios.post(url,dados).then(response => {
+                        if(response.data.token){
+                            document.cookie = 'token='+response.data.token+';SameSite=lax';
+                            window.location.href = `/home?token=${response.data.token}`;
                         }
-                    })
+                });
+       
             }
             
         }
